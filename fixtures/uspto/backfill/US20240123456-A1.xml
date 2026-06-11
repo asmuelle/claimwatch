@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Realistic excerpt in the shape of USPTO us-patent-application v4.4 full-text XML.
+     Public-domain-style government data format; trimmed to the fields ClaimWatch ingests. -->
+<us-patent-application lang="EN" dtd-version="v4.4 2014-04-03" file="US20240123456-20240418.XML" status="PRODUCTION" country="US" date-produced="20240412" date-publ="20240418">
+  <us-bibliographic-data-application lang="EN" country="US">
+    <publication-reference>
+      <document-id>
+        <country>US</country>
+        <doc-number>20240123456</doc-number>
+        <kind>A1</kind>
+        <date>20240418</date>
+      </document-id>
+    </publication-reference>
+    <application-reference appl-type="utility">
+      <document-id>
+        <country>US</country>
+        <doc-number>18123456</doc-number>
+        <date>20240115</date>
+      </document-id>
+    </application-reference>
+    <classifications-cpc>
+      <main-cpc>
+        <classification-cpc>
+          <cpc-version-indicator><date>20130101</date></cpc-version-indicator>
+          <section>G</section>
+          <class>06</class>
+          <subclass>N</subclass>
+          <main-group>3</main-group>
+          <subgroup>08</subgroup>
+        </classification-cpc>
+      </main-cpc>
+      <further-cpc>
+        <classification-cpc>
+          <cpc-version-indicator><date>20130101</date></cpc-version-indicator>
+          <section>G</section>
+          <class>06</class>
+          <subclass>N</subclass>
+          <main-group>3</main-group>
+          <subgroup>045</subgroup>
+        </classification-cpc>
+      </further-cpc>
+    </classifications-cpc>
+    <invention-title id="d2e53">Sparse mixture-of-experts routing for low-latency neural network inference</invention-title>
+    <us-parties>
+      <us-applicants>
+        <us-applicant sequence="00" app-type="applicant" designation="us-only">
+          <addressbook>
+            <orgname>Tensor Dynamics, Inc.</orgname>
+            <address><city>Austin</city><state>TX</state><country>US</country></address>
+          </addressbook>
+        </us-applicant>
+      </us-applicants>
+    </us-parties>
+  </us-bibliographic-data-application>
+  <claims id="claims">
+    <claim id="CLM-00001" num="00001">
+      <claim-text>1. A method for routing inference requests in a neural network system, the method comprising:
+        <claim-text>receiving an input token sequence at a gating network;</claim-text>
+        <claim-text>computing, by the gating network, a routing score for each expert subnetwork of a plurality of expert subnetworks;</claim-text>
+        <claim-text>selecting a subset of the expert subnetworks based on the routing scores; and</claim-text>
+        <claim-text>generating an output by combining results from the selected subset.</claim-text>
+      </claim-text>
+    </claim>
+    <claim id="CLM-00002" num="00002">
+      <claim-text>2. The method of <claim-ref idref="CLM-00001">claim 1</claim-ref>, wherein the subset consists of exactly two expert subnetworks.</claim-text>
+    </claim>
+    <claim id="CLM-00003" num="00003">
+      <claim-text>3. The method of <claim-ref idref="CLM-00002">claim 2</claim-ref>, wherein the routing scores are normalized with a softmax function.</claim-text>
+    </claim>
+  </claims>
+</us-patent-application>

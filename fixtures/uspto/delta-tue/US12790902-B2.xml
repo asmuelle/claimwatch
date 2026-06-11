@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Realistic excerpt in the shape of USPTO us-patent-grant v4.5 full-text XML.
+     Named-competitor grant OUTSIDE the watchlist CPC space (H01S, laser drivers):
+     must surface via the named-assignee bypass arm, never via CPC. -->
+<us-patent-grant lang="EN" dtd-version="v4.5 2014-04-03" file="US12790902-20260512.XML" status="PRODUCTION" country="US" date-produced="20260507" date-publ="20260512">
+  <us-bibliographic-data-grant lang="EN" country="US">
+    <publication-reference>
+      <document-id>
+        <country>US</country>
+        <doc-number>12790902</doc-number>
+        <kind>B2</kind>
+        <date>20260512</date>
+      </document-id>
+    </publication-reference>
+    <application-reference appl-type="utility">
+      <document-id>
+        <country>US</country>
+        <doc-number>18345001</doc-number>
+        <date>20230710</date>
+      </document-id>
+    </application-reference>
+    <classifications-cpc>
+      <main-cpc>
+        <classification-cpc>
+          <cpc-version-indicator><date>20130101</date></cpc-version-indicator>
+          <section>H</section>
+          <class>01</class>
+          <subclass>S</subclass>
+          <main-group>5</main-group>
+          <subgroup>0687</subgroup>
+        </classification-cpc>
+      </main-cpc>
+    </classifications-cpc>
+    <invention-title id="d2e49">Wavelength-stabilized laser diode driver with thermal compensation</invention-title>
+    <assignees>
+      <assignee>
+        <addressbook>
+          <orgname>Lumen Photonics GmbH</orgname>
+          <address><city>Jena</city><country>DE</country></address>
+        </addressbook>
+      </assignee>
+    </assignees>
+  </us-bibliographic-data-grant>
+  <claims id="claims">
+    <claim id="CLM-00001" num="00001">
+      <claim-text>1. A driver circuit for a laser diode, comprising:
+        <claim-text>a current source coupled to the laser diode;</claim-text>
+        <claim-text>a thermistor thermally coupled to the laser diode; and</claim-text>
+        <claim-text>a feedback controller configured to adjust the current source based on a resistance of the thermistor.</claim-text>
+      </claim-text>
+    </claim>
+    <claim id="CLM-00002" num="00002">
+      <claim-text>2. The driver circuit of <claim-ref idref="CLM-00001">claim 1</claim-ref>, wherein the feedback controller comprises a proportional-integral loop.</claim-text>
+    </claim>
+  </claims>
+</us-patent-grant>

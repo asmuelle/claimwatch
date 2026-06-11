@@ -1,0 +1,37 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds
+.next/
+dist/
+out/
+*.tsbuildinfo
+.turbo/
+
+# tests
+coverage/
+playwright-report/
+test-results/
+blob-report/
+
+# env & secrets — never commit; see TOOLS.md for the variable list
+.env
+.env.*
+!.env.example
+
+# local data (raw USPTO/EPO XML, downloaded bulk deltas, scratch dossiers)
+data/
+*.sqlite
+
+# tooling
+.inngest/
+.vercel/
+.eslintcache
+
+# OS / editor
+.DS_Store
+*.log
+.idea/
+.vscode/*
+!.vscode/extensions.json

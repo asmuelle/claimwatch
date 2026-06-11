@@ -1,0 +1,304 @@
+/* ClaimWatch — "prosecution blackline" visual direction (DESIGN.md).
+   Paper-warm surface, near-black ink, semantic diff colors only:
+   oxblood deletions, archival-blue insertions, sealing-wax alert red. */
+
+:root {
+  /* Palette */
+  --color-paper: oklch(97% 0.011 85);
+  --color-paper-raised: oklch(99% 0.006 85);
+  --color-ink: oklch(21% 0.012 60);
+  --color-ink-muted: oklch(45% 0.015 60);
+  --color-rule: oklch(85% 0.02 80);
+  --color-deletion: oklch(45% 0.13 25);
+  --color-deletion-wash: oklch(94% 0.025 25);
+  --color-insertion: oklch(45% 0.1 255);
+  --color-insertion-wash: oklch(94% 0.022 255);
+  --color-alert: oklch(50% 0.17 29);
+
+  /* Typography */
+  --font-serif: 'Source Serif 4', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --text-base: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
+  --text-small: 0.8125rem;
+  --text-masthead: clamp(1.9rem, 1.2rem + 2.4vw, 3.1rem);
+  --text-section: clamp(1.25rem, 1.05rem + 0.8vw, 1.75rem);
+
+  /* Rhythm */
+  --space-hairline: 0.25rem;
+  --space-tight: 0.625rem;
+  --space-block: 1.5rem;
+  --space-section: clamp(2.75rem, 2rem + 3vw, 5.5rem);
+  --measure-prose: 72ch;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: var(--text-base);
+  line-height: 1.65;
+}
+
+main {
+  max-width: 62.5rem;
+  margin: 0 auto;
+  padding: 0 var(--space-block) var(--space-section);
+}
+
+a {
+  color: var(--color-insertion);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+a:hover,
+a:focus-visible {
+  color: var(--color-ink);
+  background: var(--color-insertion-wash);
+  outline: none;
+}
+
+/* Masthead */
+.masthead {
+  border-bottom: 3px double var(--color-ink);
+  margin: 0 auto var(--space-section);
+  max-width: 62.5rem;
+  padding: var(--space-block);
+}
+
+.masthead h1 {
+  font-size: var(--text-masthead);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+.masthead .edition-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-tight) var(--space-block);
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+  margin-top: var(--space-hairline);
+}
+
+.validated-stamp {
+  color: var(--color-insertion);
+  border: 1px solid currentColor;
+  padding: 0 var(--space-tight);
+}
+
+.blocked-stamp {
+  color: var(--color-alert);
+  border: 1px solid currentColor;
+  padding: 0 var(--space-tight);
+}
+
+/* Sections */
+section {
+  margin-top: var(--space-section);
+}
+
+section > h2 {
+  font-size: var(--text-section);
+  font-weight: 600;
+  border-bottom: 1px solid var(--color-ink);
+  padding-bottom: var(--space-hairline);
+  margin: 0 0 var(--space-block);
+}
+
+/* Brief items */
+.brief-item {
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-rule);
+  border-left: 3px solid var(--color-ink);
+  padding: var(--space-block);
+  margin-bottom: var(--space-block);
+}
+
+.brief-item[data-kind='new-filing'] {
+  border-left-color: var(--color-alert);
+}
+
+.brief-item header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-tight);
+  margin-bottom: var(--space-tight);
+}
+
+.kind-tag {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-ink-muted);
+}
+
+.brief-item[data-kind='new-filing'] .kind-tag {
+  color: var(--color-alert);
+}
+
+.brief-item h3 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  margin: 0;
+  max-width: var(--measure-prose);
+}
+
+.synthesized {
+  max-width: var(--measure-prose);
+  margin: var(--space-tight) 0 0;
+}
+
+.fallback-note {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  color: var(--color-alert);
+  margin: var(--space-tight) 0 0;
+}
+
+.verify-link {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  white-space: nowrap;
+}
+
+/* Blackline rendering — the product's visual signature */
+.blackline {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.8;
+  background: var(--color-paper);
+  border: 1px solid var(--color-rule);
+  padding: var(--space-block);
+  margin: var(--space-tight) 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.blackline del {
+  color: var(--color-deletion);
+  background: var(--color-deletion-wash);
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+}
+
+.blackline ins {
+  color: var(--color-insertion);
+  background: var(--color-insertion-wash);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.18em;
+}
+
+/* Ledger tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+}
+
+caption {
+  text-align: left;
+  font-family: var(--font-serif);
+  color: var(--color-ink-muted);
+  padding-bottom: var(--space-tight);
+}
+
+th {
+  text-align: left;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 2px solid var(--color-ink);
+  padding: var(--space-hairline) var(--space-tight);
+}
+
+td {
+  border-bottom: 1px solid var(--color-rule);
+  padding: var(--space-tight);
+  vertical-align: top;
+}
+
+tr[data-decision='downrank'] td {
+  color: var(--color-ink-muted);
+}
+
+.decision-surface {
+  color: var(--color-insertion);
+}
+
+.decision-downrank {
+  color: var(--color-deletion);
+}
+
+/* Canonical record */
+.claim-record {
+  border: 1px solid var(--color-rule);
+  background: var(--color-paper-raised);
+  padding: var(--space-block);
+  margin-bottom: var(--space-block);
+}
+
+.claim-record h3 {
+  font-size: 1rem;
+  margin: 0 0 var(--space-tight);
+}
+
+.claim-record h3 .doc-meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  font-weight: 400;
+  color: var(--color-ink-muted);
+}
+
+.claim-version {
+  margin: 0 0 var(--space-tight);
+  scroll-margin-top: var(--space-block);
+}
+
+.claim-version dt {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+}
+
+.claim-version dd {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  margin: var(--space-hairline) 0 0;
+  max-width: var(--measure-prose);
+}
+
+.claim-version dd[data-status='cancelled'] {
+  color: var(--color-deletion);
+  text-decoration: line-through;
+}
+
+/* Footer */
+footer {
+  max-width: 62.5rem;
+  margin: var(--space-section) auto 0;
+  padding: var(--space-block);
+  border-top: 3px double var(--color-ink);
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+}
+
+footer p {
+  max-width: var(--measure-prose);
+}

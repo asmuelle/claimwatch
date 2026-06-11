@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    # Postgres + pgvector for packages/db integration tests.
+    # Only used once the repo is bootstrapped; harmless (idle) before that.
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: claimwatch
+          POSTGRES_PASSWORD: claimwatch
+          POSTGRES_DB: claimwatch_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U claimwatch"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgres://claimwatch:claimwatch@localhost:5432/claimwatch_test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: extractions/setup-just@v3
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable corepack (pnpm via packageManager field)
+        run: corepack enable
+
+      # Docs-only scaffold guard: before M0 bootstrap there is no package.json,
+      # so we skip install/build and keep the scaffold commit green.
+      - name: Check bootstrap status
+        id: guard
+        run: |
+          if [ -f package.json ]; then
+            echo "bootstrapped=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "bootstrapped=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::package.json not found — docs-only scaffold; skipping install and 'just ci'."
+          fi
+
+      - name: Install dependencies
+        if: steps.guard.outputs.bootstrapped == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Run CI gate (lint + typecheck + test + build)
+        if: steps.guard.outputs.bootstrapped == 'true'
+        run: just ci

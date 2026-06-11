@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Realistic excerpt in the shape of USPTO us-patent-grant v4.5 full-text XML.
+     Grant for application 17/998,204 (published as US 2023/0301877 A1).
+     Prosecution outcome: claim 1 broadened (four-bit limitation removed), claim 2 unchanged. -->
+<us-patent-grant lang="EN" dtd-version="v4.5 2014-04-03" file="US12790881-20260512.XML" status="PRODUCTION" country="US" date-produced="20260507" date-publ="20260512">
+  <us-bibliographic-data-grant lang="EN" country="US">
+    <publication-reference>
+      <document-id>
+        <country>US</country>
+        <doc-number>12790881</doc-number>
+        <kind>B2</kind>
+        <date>20260512</date>
+      </document-id>
+    </publication-reference>
+    <application-reference appl-type="utility">
+      <document-id>
+        <country>US</country>
+        <doc-number>17998204</doc-number>
+        <date>20221130</date>
+      </document-id>
+    </application-reference>
+    <classifications-cpc>
+      <main-cpc>
+        <classification-cpc>
+          <cpc-version-indicator><date>20130101</date></cpc-version-indicator>
+          <section>G</section>
+          <class>06</class>
+          <subclass>N</subclass>
+          <main-group>3</main-group>
+          <subgroup>04</subgroup>
+        </classification-cpc>
+      </main-cpc>
+    </classifications-cpc>
+    <invention-title id="d2e51">Quantized key-value cache compression for transformer attention</invention-title>
+    <assignees>
+      <assignee>
+        <addressbook>
+          <orgname>Northcurrent Labs, Inc.</orgname>
+          <address><city>Seattle</city><state>WA</state><country>US</country></address>
+        </addressbook>
+      </assignee>
+    </assignees>
+  </us-bibliographic-data-grant>
+  <claims id="claims">
+    <claim id="CLM-00001" num="00001">
+      <claim-text>1. A memory controller for a transformer model, comprising:
+        <claim-text>a quantization unit configured to compress key-value cache entries; and</claim-text>
+        <claim-text>an eviction unit configured to discard cache entries older than a fixed attention window.</claim-text>
+      </claim-text>
+    </claim>
+    <claim id="CLM-00002" num="00002">
+      <claim-text>2. The memory controller of <claim-ref idref="CLM-00001">claim 1</claim-ref>, wherein the quantization unit applies per-channel scaling.</claim-text>
+    </claim>
+  </claims>
+</us-patent-grant>
