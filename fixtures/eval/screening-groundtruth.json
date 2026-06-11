@@ -1,0 +1,1086 @@
+{
+  "description": "Hand-labeled screening ground truth for the pilot CPC vertical (G06N efficient neural inference). Labels are claim-space relevance judgments for the M1 pilot watchlist; KNOWN MISS / KNOWN FALSE POSITIVE notes document the published error budget (DESIGN.md M2).",
+  "watchlist": "Efficient neural inference (pilot)",
+  "entries": [
+    {
+      "docId": "US-2026000177-A1",
+      "title": "Mixture-of-experts routing with load-balanced gating for transformer inference",
+      "assignee": "Tensor Dynamics, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026000277-A1",
+      "title": "Key-value cache compression for transformer attention layers",
+      "assignee": "Northcurrent Labs LLC",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026000377-A1",
+      "title": "Quantization-aware training of neural network accelerators",
+      "assignee": "Cerebrum Compute Corp.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026000477-A1",
+      "title": "Continual learning with replay buffers for embedded machine learning models",
+      "assignee": "Gradient Forge, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026000577-A1",
+      "title": "Sparse attention kernels for efficient transformer inference",
+      "assignee": "Synaptic Systems GmbH",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026000677-A1",
+      "title": "Neural network inference scheduling on heterogeneous processors",
+      "assignee": "Loomwell AI, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026000777-A1",
+      "title": "Low-rank adaptation of transformer models for on-device inference",
+      "assignee": "Parallax Inference Co.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026000877-A1",
+      "title": "Dynamic quantization of attention weights during neural network inference",
+      "assignee": "Brightlattice, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026000977-A1",
+      "title": "Cache-aware request batching for machine learning inference servers",
+      "assignee": "Quantfold Technologies",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026001077-A1",
+      "title": "Mixture-of-experts neural network with sparsely activated expert layers",
+      "assignee": "Edgewise Neural, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026001177-A1",
+      "title": "Speculative decoding for autoregressive transformer inference",
+      "assignee": "Tensor Dynamics, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026001277-A1",
+      "title": "Gradient-isolated continual learning for embedded neural network controllers",
+      "assignee": "Northcurrent Labs LLC",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026001377-A1",
+      "title": "Attention head pruning for compressed transformer models",
+      "assignee": "Cerebrum Compute Corp.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026001477-A1",
+      "title": "Quantized mixture-of-experts layers for memory-constrained inference",
+      "assignee": "Gradient Forge, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026001577-A1",
+      "title": "Distillation of ensemble models into a single neural network for fast inference",
+      "assignee": "Synaptic Systems GmbH",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026001677-A1",
+      "title": "Paged key-value cache management for long-context transformer serving",
+      "assignee": "Loomwell AI, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026001777-A1",
+      "title": "Energy-aware neural network inference on battery-powered devices",
+      "assignee": "Parallax Inference Co.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026001877-A1",
+      "title": "Token-level early exit policies for efficient transformer inference",
+      "assignee": "Brightlattice, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026001977-A1",
+      "title": "Hardware-aware architecture search for machine learning inference accelerators",
+      "assignee": "Quantfold Technologies",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026002077-A1",
+      "title": "Structured sparsity patterns for quantized neural network weights",
+      "assignee": "Edgewise Neural, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026002177-A1",
+      "title": "Rotary position encoding variants for streaming transformer inference",
+      "assignee": "Tensor Dynamics, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026002277-A1",
+      "title": "Cross-layer attention sharing in compact transformer models",
+      "assignee": "Northcurrent Labs LLC",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026002377-A1",
+      "title": "Mixed-precision quantization schedules for neural network training and inference",
+      "assignee": "Cerebrum Compute Corp.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026002477-A1",
+      "title": "Expert capacity overflow handling in mixture-of-experts inference",
+      "assignee": "Gradient Forge, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026002577-A1",
+      "title": "Latency-bounded scheduling of transformer attention computation",
+      "assignee": "Synaptic Systems GmbH",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026002677-A1",
+      "title": "Memory-mapped weight streaming for large neural network inference",
+      "assignee": "Loomwell AI, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026002777-A1",
+      "title": "Adaptive cache eviction for multi-tenant machine learning serving",
+      "assignee": "Parallax Inference Co.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026002877-A1",
+      "title": "Per-channel quantization calibration for neural network deployment",
+      "assignee": "Brightlattice, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026002977-A1",
+      "title": "Continual learning without catastrophic forgetting in machine learning systems",
+      "assignee": "Quantfold Technologies",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026003077-A1",
+      "title": "Grouped-query attention for reduced key-value cache footprint",
+      "assignee": "Edgewise Neural, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026003177-A1",
+      "title": "Compiler-driven operator fusion for neural network inference graphs",
+      "assignee": "Tensor Dynamics, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026003277-A1",
+      "title": "Batch-invariant attention computation for reproducible transformer inference",
+      "assignee": "Northcurrent Labs LLC",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026003377-A1",
+      "title": "Outlier-aware quantization of transformer activation tensors",
+      "assignee": "Cerebrum Compute Corp.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026003477-A1",
+      "title": "Heterogeneous expert placement for distributed mixture-of-experts inference",
+      "assignee": "Gradient Forge, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026003577-A1",
+      "title": "On-device fine-tuning with quantized gradient accumulation for neural networks",
+      "assignee": "Synaptic Systems GmbH",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026003677-A1",
+      "title": "Pipelined attention and feed-forward execution in transformer accelerators",
+      "assignee": "Loomwell AI, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026003777-A1",
+      "title": "Learned cache admission policies for machine learning feature stores",
+      "assignee": "Parallax Inference Co.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026003877-A1",
+      "title": "Workload-adaptive sparsity for real-time neural network inference",
+      "assignee": "Brightlattice, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026003977-A1",
+      "title": "Self-distillation of attention maps in compact transformer models",
+      "assignee": "Quantfold Technologies",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026004077-A1",
+      "title": "Streaming continual learning for sensor-equipped machine learning devices",
+      "assignee": "Edgewise Neural, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026004177-A1",
+      "title": "Block-wise quantization of key-value cache entries in transformer decoding",
+      "assignee": "Tensor Dynamics, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026004277-A1",
+      "title": "Elastic scaling of mixture-of-experts inference clusters",
+      "assignee": "Northcurrent Labs LLC",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026004377-A1",
+      "title": "Approximate attention with locality-sensitive hashing for transformer inference",
+      "assignee": "Cerebrum Compute Corp.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026004477-A1",
+      "title": "Bit-serial arithmetic units for quantized neural network inference",
+      "assignee": "Gradient Forge, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026004577-A1",
+      "title": "Prefetch-driven weight cache hierarchies for machine learning accelerators",
+      "assignee": "Synaptic Systems GmbH",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026004677-A1",
+      "title": "Curriculum-based continual learning of neural network policies",
+      "assignee": "Loomwell AI, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026004777-A1",
+      "title": "Fused dequantization and matrix multiply for transformer inference kernels",
+      "assignee": "Parallax Inference Co.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026004877-A1",
+      "title": "Token pruning guided by attention entropy in transformer inference",
+      "assignee": "Brightlattice, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026004977-A1",
+      "title": "Checkpoint-free continual learning for streaming machine learning pipelines",
+      "assignee": "Quantfold Technologies",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026005077-A1",
+      "title": "Per-expert quantization profiles in mixture-of-experts neural networks",
+      "assignee": "Edgewise Neural, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026005177-A1",
+      "title": "Activation offloading with compressed cache tiers for transformer inference",
+      "assignee": "Tensor Dynamics, Inc.",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026005277-A1",
+      "title": "Reinforcement-tuned routing policies for mixture-of-experts inference",
+      "assignee": "Northcurrent Labs LLC",
+      "cpcCodes": ["G06N3/0455", "G06N3/063"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "core claim space: efficient NN inference (CPC + terms)"
+    },
+    {
+      "docId": "US-2026006077-A1",
+      "title": "Persistent key-value cache layouts for transformer model serving",
+      "assignee": "Gradient Forge, Inc.",
+      "cpcCodes": ["G06F12/0875"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "in claim space but filed outside G06N \u2014 must be caught by the embedding arm"
+    },
+    {
+      "docId": "US-2026006177-A1",
+      "title": "Scheduling neural network inference workloads in virtualized clusters",
+      "assignee": "Synaptic Systems GmbH",
+      "cpcCodes": ["G06F9/48"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "in claim space but filed outside G06N \u2014 must be caught by the embedding arm"
+    },
+    {
+      "docId": "US-2026006277-A1",
+      "title": "Compressed attention state checkpointing for resumable inference",
+      "assignee": "Loomwell AI, Inc.",
+      "cpcCodes": ["G06F11/14"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "in claim space but filed outside G06N \u2014 must be caught by the embedding arm"
+    },
+    {
+      "docId": "US-2026006377-A1",
+      "title": "Video understanding with quantized transformer backbones",
+      "assignee": "Parallax Inference Co.",
+      "cpcCodes": ["G06V10/82"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "in claim space but filed outside G06N \u2014 must be caught by the embedding arm"
+    },
+    {
+      "docId": "US-2026006477-A1",
+      "title": "Speech recognition decoder with cache-efficient attention",
+      "assignee": "Brightlattice, Inc.",
+      "cpcCodes": ["G10L15/16"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "in claim space but filed outside G06N \u2014 must be caught by the embedding arm"
+    },
+    {
+      "docId": "US-2026006577-A1",
+      "title": "Database query planning with machine learning cost models and cached inference",
+      "assignee": "Quantfold Technologies",
+      "cpcCodes": ["G06F16/2453"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "in claim space but filed outside G06N \u2014 must be caught by the embedding arm"
+    },
+    {
+      "docId": "US-2026007077-A1",
+      "title": "Sparse model serving accelerator for edge devices",
+      "assignee": "Farfield Compute, Inc.",
+      "cpcCodes": ["G06V10/94"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "KNOWN MISS: synonym-only title outside the CPC watch space \u2014 drives the published recall ceiling"
+    },
+    {
+      "docId": "US-2026007177-A1",
+      "title": "Latency-aware scheduling of deep net workloads on mobile SoCs",
+      "assignee": "Farfield Compute, Inc.",
+      "cpcCodes": ["G06F9/50"],
+      "publicationDate": "2026-05-14",
+      "label": "in-scope",
+      "note": "KNOWN MISS: synonym-only title outside the CPC watch space \u2014 drives the published recall ceiling"
+    },
+    {
+      "docId": "US-2026008077-A1",
+      "title": "Polymer-coated stent with controlled drug elution profile",
+      "assignee": "Meridian Medical Devices",
+      "cpcCodes": ["A61L31/10"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026008177-A1",
+      "title": "Variable-pitch rotor assembly for offshore wind turbines",
+      "assignee": "Bluewater Energy Systems",
+      "cpcCodes": ["F03D7/02"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026008277-A1",
+      "title": "Microfluidic chip for rapid pathogen detection in whole blood",
+      "assignee": "Hartfield Agricultural Co.",
+      "cpcCodes": ["B01L3/00"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026008377-A1",
+      "title": "Recombinant protein expression in modified yeast strains",
+      "assignee": "Stellar Packaging Group",
+      "cpcCodes": ["C12N15/81"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026008477-A1",
+      "title": "Foldable hinge mechanism for dual-display portable devices",
+      "assignee": "Cascade Mobility Corp.",
+      "cpcCodes": ["G06F1/16"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026008577-A1",
+      "title": "Catalytic converter with zoned washcoat for cold-start emissions",
+      "assignee": "Ironleaf Construction Tech",
+      "cpcCodes": ["F01N3/10"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026008677-A1",
+      "title": "Adjustable lumbar support structure for vehicle seats",
+      "assignee": "Clearline Optics AG",
+      "cpcCodes": ["B60N2/66"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026008777-A1",
+      "title": "UV-curable adhesive composition for optical lens bonding",
+      "assignee": "Summit Therapeutics",
+      "cpcCodes": ["C09J4/00"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026008877-A1",
+      "title": "Self-sealing valve assembly for beverage dispensing systems",
+      "assignee": "Polar Components Oy",
+      "cpcCodes": ["B67D1/14"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026008977-A1",
+      "title": "Thermally insulated shipping container with phase-change panels",
+      "assignee": "Verdant Irrigation LLC",
+      "cpcCodes": ["B65D81/38"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026009077-A1",
+      "title": "Soil moisture probe with capacitive multi-depth sensing",
+      "assignee": "Meridian Medical Devices",
+      "cpcCodes": ["G01N27/22"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026009177-A1",
+      "title": "Antimicrobial wound dressing with silver nanoparticle matrix",
+      "assignee": "Bluewater Energy Systems",
+      "cpcCodes": ["A61L15/46"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026009277-A1",
+      "title": "Torque-limiting fastener driver for orthopedic implants",
+      "assignee": "Hartfield Agricultural Co.",
+      "cpcCodes": ["A61B17/88"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026009377-A1",
+      "title": "Photovoltaic module mounting rail with integrated grounding",
+      "assignee": "Stellar Packaging Group",
+      "cpcCodes": ["H02S20/23"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026009477-A1",
+      "title": "Gas turbine blade cooling channel with serpentine geometry",
+      "assignee": "Cascade Mobility Corp.",
+      "cpcCodes": ["F01D5/18"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026009577-A1",
+      "title": "Modular raised-floor system for data center airflow management",
+      "assignee": "Ironleaf Construction Tech",
+      "cpcCodes": ["E04F15/024"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026009677-A1",
+      "title": "Pediatric dosing syringe with tactile increment feedback",
+      "assignee": "Clearline Optics AG",
+      "cpcCodes": ["A61J7/00"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026009777-A1",
+      "title": "Corrosion-resistant coating for subsea pipeline joints",
+      "assignee": "Summit Therapeutics",
+      "cpcCodes": ["C23C28/00"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026009877-A1",
+      "title": "Dual-chamber composting vessel with humidity regulation",
+      "assignee": "Polar Components Oy",
+      "cpcCodes": ["C05F17/907"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026009977-A1",
+      "title": "Noise-damped brake caliper assembly for rail vehicles",
+      "assignee": "Verdant Irrigation LLC",
+      "cpcCodes": ["B61H5/00"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026010077-A1",
+      "title": "Stretchable fabric electrode for cardiac monitoring garments",
+      "assignee": "Meridian Medical Devices",
+      "cpcCodes": ["A61B5/25"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026010177-A1",
+      "title": "High-shear mixer impeller for viscous food emulsions",
+      "assignee": "Bluewater Energy Systems",
+      "cpcCodes": ["B01F27/115"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026010277-A1",
+      "title": "Retractable awning with wind-load responsive locking",
+      "assignee": "Hartfield Agricultural Co.",
+      "cpcCodes": ["E04F10/06"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026010377-A1",
+      "title": "Lithium-ion cell vent design for thermal runaway mitigation",
+      "assignee": "Stellar Packaging Group",
+      "cpcCodes": ["H01M50/30"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026010477-A1",
+      "title": "Ergonomic trigger grip for handheld power sprayers",
+      "assignee": "Cascade Mobility Corp.",
+      "cpcCodes": ["B05B9/01"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026010577-A1",
+      "title": "Optical fiber splice enclosure with gel-sealed ports",
+      "assignee": "Ironleaf Construction Tech",
+      "cpcCodes": ["G02B6/44"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026010677-A1",
+      "title": "Selective herbicide formulation for broadleaf weed control",
+      "assignee": "Clearline Optics AG",
+      "cpcCodes": ["A01N43/40"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026010777-A1",
+      "title": "Magnetic levitation bearing for high-speed flywheel storage",
+      "assignee": "Summit Therapeutics",
+      "cpcCodes": ["F16C32/04"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026010877-A1",
+      "title": "Water-saving dual-flush valve with adjustable volumes",
+      "assignee": "Polar Components Oy",
+      "cpcCodes": ["E03D1/14"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026010977-A1",
+      "title": "Aerodynamic side-skirt assembly for long-haul trailers",
+      "assignee": "Verdant Irrigation LLC",
+      "cpcCodes": ["B62D35/00"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026011077-A1",
+      "title": "Infant car seat anchor with misuse-detection indicator",
+      "assignee": "Meridian Medical Devices",
+      "cpcCodes": ["B60N2/28"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026011177-A1",
+      "title": "Geotextile reinforcement grid for steep slope stabilization",
+      "assignee": "Bluewater Energy Systems",
+      "cpcCodes": ["E02D17/20"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026011277-A1",
+      "title": "Espresso brewing unit with pre-infusion pressure profiling",
+      "assignee": "Hartfield Agricultural Co.",
+      "cpcCodes": ["A47J31/36"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026011377-A1",
+      "title": "Hydrogen storage tank liner with reduced permeation",
+      "assignee": "Stellar Packaging Group",
+      "cpcCodes": ["F17C11/00"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026011477-A1",
+      "title": "Suture anchor with bioabsorbable barbed retention",
+      "assignee": "Cascade Mobility Corp.",
+      "cpcCodes": ["A61B17/04"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026011577-A1",
+      "title": "Ceramic matrix composite for turbine shroud segments",
+      "assignee": "Ironleaf Construction Tech",
+      "cpcCodes": ["C04B35/80"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026011677-A1",
+      "title": "Anti-fog coating process for endoscope objective lenses",
+      "assignee": "Clearline Optics AG",
+      "cpcCodes": ["G02B1/18"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026011777-A1",
+      "title": "Vibration-isolated handle system for demolition hammers",
+      "assignee": "Summit Therapeutics",
+      "cpcCodes": ["B25D17/24"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026011877-A1",
+      "title": "Smart irrigation manifold with zone pressure balancing",
+      "assignee": "Polar Components Oy",
+      "cpcCodes": ["A01G25/16"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026011977-A1",
+      "title": "Recyclable barrier film for modified-atmosphere packaging",
+      "assignee": "Verdant Irrigation LLC",
+      "cpcCodes": ["B32B27/32"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026012077-A1",
+      "title": "Surgical stapler with progressive jaw closure control",
+      "assignee": "Meridian Medical Devices",
+      "cpcCodes": ["A61B17/072"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026012177-A1",
+      "title": "Frost-resistant exterior faucet with internal drain",
+      "assignee": "Bluewater Energy Systems",
+      "cpcCodes": ["E03B7/12"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026012277-A1",
+      "title": "Sound-absorbing ceiling baffle of compressed mineral wool",
+      "assignee": "Hartfield Agricultural Co.",
+      "cpcCodes": ["E04B9/00"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026012377-A1",
+      "title": "Quick-release pedal cleat with adjustable float angle",
+      "assignee": "Stellar Packaging Group",
+      "cpcCodes": ["A43B5/14"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026012477-A1",
+      "title": "Centrifugal separator bowl for dairy fat standardization",
+      "assignee": "Cascade Mobility Corp.",
+      "cpcCodes": ["B04B1/08"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026012577-A1",
+      "title": "Phase-balanced inverter topology for rooftop solar arrays",
+      "assignee": "Ironleaf Construction Tech",
+      "cpcCodes": ["H02M7/48"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026012677-A1",
+      "title": "Tamper-evident closure for pharmaceutical bottles",
+      "assignee": "Clearline Optics AG",
+      "cpcCodes": ["B65D41/34"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026012777-A1",
+      "title": "Heated windshield wiper rest zone with timed cycling",
+      "assignee": "Summit Therapeutics",
+      "cpcCodes": ["B60S1/02"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026012877-A1",
+      "title": "Collapsible cargo bike frame with mid-drive mounting",
+      "assignee": "Polar Components Oy",
+      "cpcCodes": ["B62K15/00"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026012977-A1",
+      "title": "Dental aligner material with graded elastic modulus",
+      "assignee": "Verdant Irrigation LLC",
+      "cpcCodes": ["A61C7/08"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026013077-A1",
+      "title": "Roof-integrated rainwater diverter with leaf separation",
+      "assignee": "Meridian Medical Devices",
+      "cpcCodes": ["E04D13/04"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026013177-A1",
+      "title": "Cryogenic seal assembly for LNG transfer couplings",
+      "assignee": "Bluewater Energy Systems",
+      "cpcCodes": ["F16J15/36"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026013277-A1",
+      "title": "Adjustable-height workbench with load-balancing casters",
+      "assignee": "Hartfield Agricultural Co.",
+      "cpcCodes": ["B25H1/04"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026013377-A1",
+      "title": "Fire-retardant cable tray coating for tunnel installations",
+      "assignee": "Stellar Packaging Group",
+      "cpcCodes": ["H02G3/04"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026013477-A1",
+      "title": "Compact heat exchanger fins with vortex generators",
+      "assignee": "Cascade Mobility Corp.",
+      "cpcCodes": ["F28F3/02"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026013577-A1",
+      "title": "Child-resistant blister pack with audible open indicator",
+      "assignee": "Ironleaf Construction Tech",
+      "cpcCodes": ["B65D75/36"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026013677-A1",
+      "title": "Pressure-compensating drip emitter for orchard irrigation",
+      "assignee": "Clearline Optics AG",
+      "cpcCodes": ["A01G25/02"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "unrelated art unit; no screening arm should fire"
+    },
+    {
+      "docId": "US-2026014077-A1",
+      "title": "Cooling assembly for high-voltage transformer substations",
+      "assignee": "Hartfield Agricultural Co.",
+      "cpcCodes": ["H02B1/56"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "KNOWN FALSE POSITIVE: 'transformer' homonym (power grid) trips the embedding arm"
+    },
+    {
+      "docId": "US-2026014177-A1",
+      "title": "Machine learning of neural network models for crop irrigation scheduling",
+      "assignee": "Stellar Packaging Group",
+      "cpcCodes": ["A01G25/16"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "KNOWN FALSE POSITIVE: agricultural ML \u2014 terminology overlaps, claim space does not"
+    },
+    {
+      "docId": "US-2026014277-A1",
+      "title": "Distributed cache invalidation for content delivery networks",
+      "assignee": "Cascade Mobility Corp.",
+      "cpcCodes": ["H04L67/5682"],
+      "publicationDate": "2026-05-14",
+      "label": "out-of-scope",
+      "note": "KNOWN FALSE POSITIVE: CDN 'cache' homonym trips the embedding arm"
+    }
+  ]
+}

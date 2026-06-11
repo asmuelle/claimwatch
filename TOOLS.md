@@ -2,62 +2,64 @@
 
 ## just recipes
 
-| Recipe | What it does | When to run |
-|---|---|---|
-| `just` | List all recipes | Orientation |
-| `just setup` | `corepack enable` + `pnpm install` | Fresh clone; after lockfile changes |
-| `just dev` | Start Next.js + Inngest dev servers (`pnpm dev`) | Daily development |
-| `just db-up` | `docker compose up -d postgres` (pgvector/pgvector:pg16) | Before migrate/test/dev |
-| `just db-down` | Stop local services | Done for the day |
-| `just migrate` | Apply Drizzle migrations (`packages/db`) to `$DATABASE_URL` | After schema changes; after db-up on fresh volume |
-| `just test` | Vitest across all packages | Constantly (TDD); before commit |
-| `just e2e` | Playwright e2e against apps/web | Before merging UI/flow changes |
-| `just lint` | ESLint all packages | Before commit |
-| `just format` | Prettier write | When the format hook hasn't already |
-| `just typecheck` | `tsc --noEmit`, strict | Before commit |
-| `just build` | Build packages + web app | Verifying production output |
-| `just ci` | lint + typecheck + test + build | The merge gate; must be green before PR |
+| Recipe           | What it does                                                                                                                                       | When to run                                        |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| `just`           | List all recipes                                                                                                                                   | Orientation                                        |
+| `just setup`     | `corepack enable` + `pnpm install`                                                                                                                 | Fresh clone; after lockfile changes                |
+| `just dev`       | Start Next.js + Inngest dev servers (`pnpm dev`)                                                                                                   | Daily development                                  |
+| `just db-up`     | `docker compose up -d postgres` (pgvector/pgvector:pg16, host port **5433**)                                                                       | Before migrate/test-db/dev                         |
+| `just db-down`   | Stop local services                                                                                                                                | Done for the day                                   |
+| `just migrate`   | Apply Drizzle migrations (`packages/db`) to `$DATABASE_URL`                                                                                        | After schema changes; after db-up on fresh volume  |
+| `just test`      | Vitest across all packages; DB suites **skip** when `DATABASE_URL` is unset                                                                        | Constantly (TDD); before commit                    |
+| `just test-db`   | DB integration suite (`*.db.test.ts`) against live Postgres; defaults `DATABASE_URL` to the compose instance on 5433 and applies migrations itself | After `just db-up`; before merging storage changes |
+| `just e2e`       | Playwright e2e: `next build` + `next start` (port 3411, chromium), stops the server afterwards                                                     | Before merging UI/flow changes                     |
+| `just lint`      | ESLint all packages                                                                                                                                | Before commit                                      |
+| `just format`    | Prettier write                                                                                                                                     | When the format hook hasn't already                |
+| `just typecheck` | `tsc --noEmit`, strict                                                                                                                             | Before commit                                      |
+| `just build`     | Build packages + web app                                                                                                                           | Verifying production output                        |
+| `just ci`        | lint + typecheck + test + build                                                                                                                    | The merge gate; must be green before PR            |
 
 Until M0 bootstrap, recipes exit with a help message (no `package.json` yet) — that is the intended docs-only state.
 
 ## External data sources & APIs
 
-| Source | Used for | Auth env var | Cost / limits | Link |
-|---|---|---|---|---|
-| USPTO Open Data Portal — bulk delta datasets | Tue (grants) / Thu (pre-grant pubs) ingestion; the canonical corpus | `USPTO_ODP_API_KEY` | Free; per-key request throttling — always prefer bulk files over per-document calls | https://data.uspto.gov |
-| USPTO Patent File Wrapper API | Prosecution history (office actions, amendments, abandonment); backfill to 2001; daily refresh | `USPTO_ODP_API_KEY` | Free; throttled per key | https://data.uspto.gov/apis/patent-file-wrapper |
-| EPO Open Patent Services (OPS) | EP family members, claim texts, legal status | `EPO_OPS_KEY`, `EPO_OPS_SECRET` (OAuth2) | Free tier = 4GB/mo fair use, **pilot-only**; paid tier ~EUR 1–4K/yr at scale — budget before M2 | https://www.epo.org/searching-for-patents/data/web-services/ops.html |
-| CourtListener / RECAP API | Litigation dockets (Pro tier, M3) | `COURTLISTENER_API_TOKEN` | Free with token, rate limited; underlying PACER fetches are metered ($0.10/page) — must stay behind `PACER_SPEND_CAP_USD` | https://www.courtlistener.com/api/ |
-| Anthropic API | Haiku screening ($1–3/watchlist-week), Sonnet synthesis, Opus-class flagged prosecution reasoning ($3–10/wk) | `ANTHROPIC_API_KEY` | Pay-per-token; per-watchlist weekly budgets enforced in `packages/pipeline` | https://docs.anthropic.com |
-| Voyage AI | Claim-space embeddings (voyage-3) into pgvector | `VOYAGE_API_KEY` | Pay-per-token, small line item | https://docs.voyageai.com |
-| Resend | Weekly brief email delivery | `RESEND_API_KEY` | Free tier fine through M1 | https://resend.com |
-| S3-compatible storage | Immutable raw XML/PDF archive | `S3_ENDPOINT`, `S3_BUCKET_RAW`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` | Cents/GB (R2/S3) | — |
-| Stripe (M3) | Subscriptions + Firm workspace metering + Diligence Snapshot checkout | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | Standard fees | https://stripe.com/docs |
+| Source                                       | Used for                                                                                                     | Auth env var                                                               | Cost / limits                                                                                                             | Link                                                                 |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| USPTO Open Data Portal — bulk delta datasets | Tue (grants) / Thu (pre-grant pubs) ingestion; the canonical corpus                                          | `USPTO_ODP_API_KEY`                                                        | Free; per-key request throttling — always prefer bulk files over per-document calls                                       | https://data.uspto.gov                                               |
+| USPTO Patent File Wrapper API                | Prosecution history (office actions, amendments, abandonment); backfill to 2001; daily refresh               | `USPTO_ODP_API_KEY`                                                        | Free; throttled per key                                                                                                   | https://data.uspto.gov/apis/patent-file-wrapper                      |
+| EPO Open Patent Services (OPS)               | EP family members, claim texts, legal status                                                                 | `EPO_OPS_KEY`, `EPO_OPS_SECRET` (OAuth2)                                   | Free tier = 4GB/mo fair use, **pilot-only**; paid tier ~EUR 1–4K/yr at scale — budget before M2                           | https://www.epo.org/searching-for-patents/data/web-services/ops.html |
+| CourtListener / RECAP API                    | Litigation dockets (Pro tier, M3)                                                                            | `COURTLISTENER_API_TOKEN`                                                  | Free with token, rate limited; underlying PACER fetches are metered ($0.10/page) — must stay behind `PACER_SPEND_CAP_USD` | https://www.courtlistener.com/api/                                   |
+| Anthropic API                                | Haiku screening ($1–3/watchlist-week), Sonnet synthesis, Opus-class flagged prosecution reasoning ($3–10/wk) | `ANTHROPIC_API_KEY`                                                        | Pay-per-token; per-watchlist weekly budgets enforced in `packages/pipeline`                                               | https://docs.anthropic.com                                           |
+| Voyage AI                                    | Claim-space embeddings (voyage-3) into pgvector                                                              | `VOYAGE_API_KEY`                                                           | Pay-per-token, small line item                                                                                            | https://docs.voyageai.com                                            |
+| Resend                                       | Weekly brief email delivery                                                                                  | `RESEND_API_KEY`                                                           | Free tier fine through M1                                                                                                 | https://resend.com                                                   |
+| S3-compatible storage                        | Immutable raw XML/PDF archive                                                                                | `S3_ENDPOINT`, `S3_BUCKET_RAW`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` | Cents/GB (R2/S3)                                                                                                          | —                                                                    |
+| Stripe (M3)                                  | Subscriptions + Firm workspace metering + Diligence Snapshot checkout                                        | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`                               | Standard fees                                                                                                             | https://stripe.com/docs                                              |
 
 WIPO PATENTSCOPE (additional jurisdictions) is deliberately out of scope until after M3 — covered/not-covered is disclosed in every brief (see AGENTS.md invariant 4).
 
 ## Required env vars
 
-| Variable | Purpose |
-|---|---|
-| `DATABASE_URL` | Postgres 16 + pgvector connection string |
-| `USPTO_ODP_API_KEY` | USPTO Open Data Portal + File Wrapper API |
-| `EPO_OPS_KEY` / `EPO_OPS_SECRET` | EPO OPS OAuth2 client credentials |
-| `COURTLISTENER_API_TOKEN` | CourtListener/RECAP (Pro tier) |
-| `PACER_SPEND_CAP_USD` | Hard per-org cap on metered PACER spend |
-| `ANTHROPIC_API_KEY` | Screening + synthesis models |
-| `VOYAGE_API_KEY` | Claim embeddings |
-| `RESEND_API_KEY` | Brief email delivery |
-| `S3_ENDPOINT` / `S3_BUCKET_RAW` / `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` | Raw document archive |
-| `INNGEST_EVENT_KEY` / `INNGEST_SIGNING_KEY` | Scheduler (production only; dev server needs neither) |
-| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | Billing (M3) |
-| `NEXT_PUBLIC_APP_URL` | Absolute URLs in emails/verify links |
+| Variable                                                                      | Purpose                                               |
+| ----------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `DATABASE_URL`                                                                | Postgres 16 + pgvector connection string              |
+| `USPTO_ODP_API_KEY`                                                           | USPTO Open Data Portal + File Wrapper API             |
+| `EPO_OPS_KEY` / `EPO_OPS_SECRET`                                              | EPO OPS OAuth2 client credentials                     |
+| `COURTLISTENER_API_TOKEN`                                                     | CourtListener/RECAP (Pro tier)                        |
+| `PACER_SPEND_CAP_USD`                                                         | Hard per-org cap on metered PACER spend               |
+| `ANTHROPIC_API_KEY`                                                           | Screening + synthesis models                          |
+| `VOYAGE_API_KEY`                                                              | Claim embeddings                                      |
+| `RESEND_API_KEY`                                                              | Brief email delivery                                  |
+| `S3_ENDPOINT` / `S3_BUCKET_RAW` / `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` | Raw document archive                                  |
+| `INNGEST_EVENT_KEY` / `INNGEST_SIGNING_KEY`                                   | Scheduler (production only; dev server needs neither) |
+| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET`                                 | Billing (M3)                                          |
+| `NEXT_PUBLIC_APP_URL`                                                         | Absolute URLs in emails/verify links                  |
 
 Values live in `.env` (gitignored); commit `.env.example` with names only. `packages/core` exposes a startup validator that fails fast on missing vars per deploy target.
 
 ## Local services
 
-- **Postgres 16 + pgvector** via `docker compose` (`pgvector/pgvector:pg16`), started with `just db-up`. The vector extension is enabled in the first Drizzle migration.
+- **Postgres 16 + pgvector** via `docker compose` (`pgvector/pgvector:pg16`), started with `just db-up`. Bound to **host port 5433** (container 5432) so it never collides with other local Postgres instances; local URL: `postgres://claimwatch:claimwatch@localhost:5433/claimwatch`. The vector extension is enabled in the first Drizzle migration; migration `0001` installs the append-only triggers (UPDATE/DELETE on `document`/`claim_version`/`claim_diff` is rejected by the database itself).
+- **Playwright chromium** for `just e2e`: one-time `pnpm exec playwright install chromium`. The e2e run builds apps/web, serves it with `next start --port 3411`, and Playwright kills the server when the suite ends.
 - **Inngest dev server** runs as part of `just dev` for local cron/step execution (no cloud account needed in dev).
 - No other local services; S3 can point at R2/MinIO in dev or tests can stub the storage client.
 
@@ -66,7 +68,7 @@ Values live in `.env` (gitignored); commit `.env.example` with names only. `pack
 - Triggers on every push and pull request; single job on `ubuntu-latest`.
 - Steps: checkout → `extractions/setup-just@v3` → Node 22 + `corepack enable` → **bootstrap guard** → `pnpm install --frozen-lockfile` → `just ci`.
 - **Bootstrap guard:** if `package.json` is absent (docs-only scaffold), install/build steps are skipped with a `::notice::` and the run stays green. Once M0 lands, the same workflow runs the full gate with no edits.
-- A `pgvector/pgvector:pg16` service container is wired via `DATABASE_URL` (`claimwatch_test` db) for `packages/db` integration tests; it idles before bootstrap.
+- A `pgvector/pgvector:pg16` service container is wired via `DATABASE_URL` (`claimwatch_test` db). Because the workflow exports `DATABASE_URL`, the `*.db.test.ts` integration suite runs as part of `just ci` on GitHub (it applies migrations programmatically before testing). Locally without a database the same suite skips and `just ci` stays green with no Docker.
 
 ## AI harness notes (.claude/settings.json)
 

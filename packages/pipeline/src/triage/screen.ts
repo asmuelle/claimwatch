@@ -4,8 +4,7 @@
  * EVERY document gets a logged screening_result, including rejects. Named
  * competitors bypass the classifier entirely.
  */
-import type { MemoryStore } from '../store/memoryStore';
-import type { MatchArm, ScreeningResultRow, StoredDocument } from '../store/types';
+import type { MatchArm, ScreeningResultRow, SliceStore, StoredDocument } from '../store/types';
 import { termOverlapScore } from '../llm/mocks';
 import { spendTokens } from '../llm/types';
 import type { RelevanceClassifier, TokenBudget } from '../llm/types';
@@ -40,13 +39,13 @@ function matchArms(
  * Screens the week's documents against one watchlist. Deterministic order
  * (sorted by docId); classifier spend is budget-capped (invariant 7).
  */
-export function screenDocuments(
-  store: MemoryStore,
+export async function screenDocuments(
+  store: SliceStore,
   watchlist: WatchlistConfig,
   docs: readonly StoredDocument[],
   classifier: RelevanceClassifier,
   initialBudget: TokenBudget,
-): ScreeningOutcome {
+): Promise<ScreeningOutcome> {
   const ordered = [...docs].sort((a, b) => a.docId.localeCompare(b.docId));
   const surfaced: StoredDocument[] = [];
   const results: ScreeningResultRow[] = [];
@@ -58,7 +57,7 @@ export function screenDocuments(
 
     if (arms.includes('named-assignee')) {
       // Named competitors always surface — no classifier, no spend.
-      const row = store.appendScreeningResult({
+      const row = await store.appendScreeningResult({
         docId: doc.docId,
         watchlistName: watchlist.name,
         embeddingScore,
@@ -77,7 +76,7 @@ export function screenDocuments(
 
     if (arms.length === 0) {
       // Not a candidate, but still logged for recall audits — never silent.
-      const row = store.appendScreeningResult({
+      const row = await store.appendScreeningResult({
         docId: doc.docId,
         watchlistName: watchlist.name,
         embeddingScore,
@@ -96,7 +95,7 @@ export function screenDocuments(
     const verdict = classifier.classify(doc, watchlist.claimSpaceDescription);
     budget = spendTokens(budget, verdict.tokensUsed, 'screening');
     const decision = verdict.verdict === 'out-of-scope' ? 'downrank' : 'surface';
-    const row = store.appendScreeningResult({
+    const row = await store.appendScreeningResult({
       docId: doc.docId,
       watchlistName: watchlist.name,
       embeddingScore,

@@ -8,6 +8,20 @@
       "when": 1781122037355,
       "tag": "0000_wandering_nomad",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1781185152616,
+      "tag": "0001_append_only_guards",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781185257583,
+      "tag": "0002_score_double_precision",
+      "breakpoints": true
     }
   ]
 }

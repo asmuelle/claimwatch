@@ -5,8 +5,8 @@ import { USPTO_FIXTURES_DIR } from './testSupport/fixtures';
 const NOW = '2026-05-15T12:00:00.000Z';
 
 describe('the M1 slice end to end', () => {
-  test('ingests 7 documents across backfill and the Tue/Thu deltas', () => {
-    const slice = runSlice({ fixturesDir: USPTO_FIXTURES_DIR, nowIso: NOW });
+  test('ingests 7 documents across backfill and the Tue/Thu deltas', async () => {
+    const slice = await runSlice({ fixturesDir: USPTO_FIXTURES_DIR, nowIso: NOW });
 
     expect(slice.documents).toHaveLength(7);
     expect(slice.ingest.map((c) => c.documentsAdded)).toEqual([2, 3, 2]);
@@ -15,8 +15,8 @@ describe('the M1 slice end to end', () => {
     expect(slice.brief.validatedAt).toBe(NOW);
   });
 
-  test('builds claim timelines for all five families', () => {
-    const slice = runSlice({ fixturesDir: USPTO_FIXTURES_DIR, nowIso: NOW });
+  test('builds claim timelines for all five families', async () => {
+    const slice = await runSlice({ fixturesDir: USPTO_FIXTURES_DIR, nowIso: NOW });
 
     expect(slice.timelines.map((t) => t.familyId)).toEqual([
       '17998204',
@@ -30,8 +30,8 @@ describe('the M1 slice end to end', () => {
     expect(tensor?.assignee).toBe('Tensor Dynamics, Inc.');
   });
 
-  test('logs model spend for the week under the configured budgets', () => {
-    const slice = runSlice({ fixturesDir: USPTO_FIXTURES_DIR, nowIso: NOW });
+  test('logs model spend for the week under the configured budgets', async () => {
+    const slice = await runSlice({ fixturesDir: USPTO_FIXTURES_DIR, nowIso: NOW });
 
     expect(slice.screeningTokensUsed).toBeGreaterThan(0);
     expect(slice.screeningTokensUsed).toBeLessThanOrEqual(slice.watchlist.screeningTokenBudget);
@@ -39,16 +39,16 @@ describe('the M1 slice end to end', () => {
     expect(slice.synthesisTokensUsed).toBeLessThanOrEqual(slice.watchlist.synthesisTokenBudget);
   });
 
-  test('the whole slice is deterministic: two runs are byte-identical', () => {
-    const a = runSlice({ fixturesDir: USPTO_FIXTURES_DIR, nowIso: NOW });
-    const b = runSlice({ fixturesDir: USPTO_FIXTURES_DIR, nowIso: NOW });
+  test('the whole slice is deterministic: two runs are byte-identical', async () => {
+    const a = await runSlice({ fixturesDir: USPTO_FIXTURES_DIR, nowIso: NOW });
+    const b = await runSlice({ fixturesDir: USPTO_FIXTURES_DIR, nowIso: NOW });
 
     expect(JSON.stringify(a)).toBe(JSON.stringify(b));
   });
 
-  test('runs without any model API key in the environment', () => {
+  test('runs without any model API key in the environment', async () => {
     expect(process.env.ANTHROPIC_API_KEY).toBeUndefined();
-    const slice = runSlice({ fixturesDir: USPTO_FIXTURES_DIR, nowIso: NOW });
+    const slice = await runSlice({ fixturesDir: USPTO_FIXTURES_DIR, nowIso: NOW });
     expect(slice.brief.validatedAt).not.toBeNull();
   });
 });

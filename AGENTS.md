@@ -5,7 +5,7 @@
 **ClaimWatch** is a patent/IP radar for IP-heavy startups and boutique patent law firms: a weekly pipeline over canonical USPTO/EPO/litigation feeds that maintains living claim-evolution dossiers per family and competitor, and ships a weekly email brief where **every assertion is mechanically checkable** against the source document, claim number, and date.
 
 - **Who pays:** founders/CTOs/in-house counsel at deeptech, biotech, hardware, and AI startups ($149–399/mo), and boutique IP firms reselling white-label briefs ($1,250/mo + per-workspace meter).
-- **Status:** Tier 1 candidate (#1 of 12 finalists, survived adversarial platform-risk review). Currently a docs + harness scaffold — no application code yet. First job is DESIGN.md milestone M0.
+- **Status:** Tier 1 candidate (#1 of 12 finalists, survived adversarial platform-risk review). M0 (bootstrap), M1 (fixture-driven vertical slice), and M2 (trust layer: live Postgres path, DB-level append-only triggers, hard send-gate, recall eval, Playwright e2e) are landed. Next: live ODP/Anthropic/Resend clients + Inngest wiring, then DESIGN.md milestone M3.
 
 ## Read first
 
@@ -17,19 +17,20 @@
 
 `just` is the single source of truth. **Use just recipes, never raw pnpm/docker commands**, so local and CI behavior stay identical.
 
-| Recipe | What it does |
-|---|---|
-| `just` | List recipes |
-| `just setup` | corepack enable + pnpm install |
-| `just dev` | Next.js + Inngest dev servers |
-| `just db-up` / `just db-down` | Start/stop local Postgres 16 + pgvector |
-| `just migrate` | Apply Drizzle migrations |
-| `just test` | Vitest unit tests, all packages |
-| `just e2e` | Playwright e2e (apps/web) |
-| `just lint` / `just format` | ESLint / Prettier |
-| `just typecheck` | tsc --noEmit, strict |
-| `just build` | Build all packages + web app |
-| `just ci` | lint + typecheck + test + build (the merge gate) |
+| Recipe                        | What it does                                                            |
+| ----------------------------- | ----------------------------------------------------------------------- |
+| `just`                        | List recipes                                                            |
+| `just setup`                  | corepack enable + pnpm install                                          |
+| `just dev`                    | Next.js + Inngest dev servers                                           |
+| `just db-up` / `just db-down` | Start/stop local Postgres 16 + pgvector (host port 5433)                |
+| `just migrate`                | Apply Drizzle migrations                                                |
+| `just test`                   | Vitest unit tests, all packages (DB suites skip without `DATABASE_URL`) |
+| `just test-db`                | DB integration suite against live Postgres (`just db-up` first)         |
+| `just e2e`                    | Playwright e2e (builds + serves apps/web, chromium)                     |
+| `just lint` / `just format`   | ESLint / Prettier                                                       |
+| `just typecheck`              | tsc --noEmit, strict                                                    |
+| `just build`                  | Build all packages + web app                                            |
+| `just ci`                     | lint + typecheck + test + build (the merge gate)                        |
 
 Before bootstrap (M0), recipes fail with a pointer to DESIGN.md — that is expected.
 
@@ -37,12 +38,12 @@ Before bootstrap (M0), recipes fail with a pointer to DESIGN.md — that is expe
 
 A pnpm-workspace research pipeline: Inngest crons aligned to the USPTO Tue/Thu publication cycle ingest bulk deltas into immutable raw storage and Postgres; a **deterministic** diff engine appends claim versions and computes blacklines; cheap-model screening triages new documents against watchlists; a frontier-model pass synthesizes dossiers and the weekly brief under cite-or-omit grounding with post-generation citation validation; Resend delivers the brief, and the Next.js app is the archive and verification surface.
 
-| Module | Responsibility |
-|---|---|
-| `apps/web` | Next.js 15 App Router: dashboard, dossiers, claim timelines, watchlists, brief archive, Inngest endpoint |
-| `packages/core` | Pure TS, zero IO: claim parsing/normalization, deterministic diff, diff heuristics, citation validator, plan-limit policy |
-| `packages/pipeline` | Inngest functions: ingestion, backfill, screening, synthesis, brief render/send |
-| `packages/db` | Drizzle schema + migrations, pgvector queries, append-only claim_version tables |
+| Module              | Responsibility                                                                                                            |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `apps/web`          | Next.js 15 App Router: dashboard, dossiers, claim timelines, watchlists, brief archive, Inngest endpoint                  |
+| `packages/core`     | Pure TS, zero IO: claim parsing/normalization, deterministic diff, diff heuristics, citation validator, plan-limit policy |
+| `packages/pipeline` | Inngest functions: ingestion, backfill, screening, synthesis, brief render/send                                           |
+| `packages/db`       | Drizzle schema + migrations, pgvector queries, append-only claim_version tables                                           |
 
 Dependency direction: `apps/web` and `packages/pipeline` depend on `core` and `db`; `core` depends on nothing with IO.
 
@@ -70,13 +71,13 @@ Dependency direction: `apps/web` and `packages/pipeline` depend on `core` and `d
 
 ## PRODUCT INVARIANTS (non-negotiable)
 
-1. **Deterministic before LLM.** Claim diffs are computed by the deterministic diff engine in `packages/core` from canonical text. No LLM ever generates, edits, or "fixes" diff content. LLM annotations live in separate fields and never overwrite deterministic output. *Test: diff output is a pure function of the two claim texts; byte-identical across runs.*
-2. **Cite-or-omit.** Every synthesized sentence in a dossier or brief resolves to a stored (docId, claimNo, date) via the citation validator, post-generation. Failing sentences are dropped — never paraphrased, never sent. *Test: a seeded invalid citation blocks the brief (`validated_at` stays null).*
-3. **Never silently drop a candidate.** Screening is recall-biased: CPC ∪ embedding ∪ name match (union, not intersection); models may downrank, never delete; every screened-out doc keeps a logged `screening_result`. Named competitors bypass screening entirely. *Test: a doc matching a named assignee always appears in the brief queue.*
-4. **No legal advice.** Output is research observation, never an FTO/infringement opinion. Banned-phrase lint runs on every synthesized output; every brief/PDF carries the counsel disclaimer and a coverage disclosure (jurisdictions watched and NOT watched). *Test: banned phrases in model output fail the assembly step.*
-5. **Raw documents are immutable; claim history is append-only.** Raw XML/PDF stored once in S3 with content hash; `document` and `claim_version` rows are never updated or deleted, only appended. *Test: schema has no UPDATE path for claim_version; ingestion re-run is a no-op.*
+1. **Deterministic before LLM.** Claim diffs are computed by the deterministic diff engine in `packages/core` from canonical text. No LLM ever generates, edits, or "fixes" diff content. LLM annotations live in separate fields and never overwrite deterministic output. _Test: diff output is a pure function of the two claim texts; byte-identical across runs._
+2. **Cite-or-omit.** Every synthesized sentence in a dossier or brief resolves to a stored (docId, claimNo, date) via the citation validator, post-generation. Failing sentences are dropped — never paraphrased, never sent. _Test: a seeded invalid citation blocks the brief (`validated_at` stays null)._
+3. **Never silently drop a candidate.** Screening is recall-biased: CPC ∪ embedding ∪ name match (union, not intersection); models may downrank, never delete; every screened-out doc keeps a logged `screening_result`. Named competitors bypass screening entirely. _Test: a doc matching a named assignee always appears in the brief queue._
+4. **No legal advice.** Output is research observation, never an FTO/infringement opinion. Banned-phrase lint runs on every synthesized output; every brief/PDF carries the counsel disclaimer and a coverage disclosure (jurisdictions watched and NOT watched). _Test: banned phrases in model output fail the assembly step._
+5. **Raw documents are immutable; claim history is append-only.** Raw XML/PDF stored once in S3 with content hash; `document` and `claim_version` rows are never updated or deleted, only appended. _Test: schema has no UPDATE path for claim_version; ingestion re-run is a no-op._
 6. **Idempotent, cycle-aligned ingestion.** Crons align to the Tue/Thu publication cycle; every step keys on source IDs/content hashes so retries and re-runs are no-ops; a skipped delta file raises an alert, not a log line.
-7. **Cost ladder is enforced in code.** Haiku-class for screening, Sonnet for synthesis, Opus-class only for flagged prosecution reasoning — with per-watchlist weekly token budgets and a hard per-org PACER spend cap. *Test: exceeding a budget halts the step with an alert, not an overrun.*
+7. **Cost ladder is enforced in code.** Haiku-class for screening, Sonnet for synthesis, Opus-class only for flagged prosecution reasoning — with per-watchlist weekly token budgets and a hard per-org PACER spend cap. _Test: exceeding a budget halts the step with an alert, not an overrun._
 8. **No secrets in the repo.** Env vars only (TOOLS.md table); `.env*` is gitignored; startup validation fails fast when required vars are missing.
 
 ## Working style in this repo

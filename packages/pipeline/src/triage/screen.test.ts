@@ -10,15 +10,18 @@ import { USPTO_FIXTURES_DIR } from '../testSupport/fixtures';
 import { screenDocuments } from './screen';
 import { M1_WATCHLIST } from './watchlist';
 
-function ingestedWeek(): { store: MemoryStore; weekDocs: readonly StoredDocument[] } {
+async function ingestedWeek(): Promise<{
+  store: MemoryStore;
+  weekDocs: readonly StoredDocument[];
+}> {
   const store = new MemoryStore();
-  ingestDelta(store, loadDelta(USPTO_FIXTURES_DIR, 'backfill'));
-  ingestDelta(store, loadDelta(USPTO_FIXTURES_DIR, 'delta-tue'));
-  ingestDelta(store, loadDelta(USPTO_FIXTURES_DIR, 'delta-thu'));
+  await ingestDelta(store, loadDelta(USPTO_FIXTURES_DIR, 'backfill'));
+  await ingestDelta(store, loadDelta(USPTO_FIXTURES_DIR, 'delta-tue'));
+  await ingestDelta(store, loadDelta(USPTO_FIXTURES_DIR, 'delta-thu'));
   const weekDates = new Set(['2026-05-12', '2026-05-14']);
   return {
     store,
-    weekDocs: store.listDocuments().filter((d) => weekDates.has(d.publicationDate)),
+    weekDocs: (await store.listDocuments()).filter((d) => weekDates.has(d.publicationDate)),
   };
 }
 
@@ -40,19 +43,19 @@ class RejectAllClassifier implements RelevanceClassifier {
 }
 
 describe('screening logs every document (invariant 3: never silently drop)', () => {
-  test('all 5 week documents get a screening_result row, including rejects', () => {
-    const { store, weekDocs } = ingestedWeek();
+  test('all 5 week documents get a screening_result row, including rejects', async () => {
+    const { store, weekDocs } = await ingestedWeek();
 
-    const outcome = screenDocuments(store, M1_WATCHLIST, weekDocs, classifier, budget);
+    const outcome = await screenDocuments(store, M1_WATCHLIST, weekDocs, classifier, budget);
 
     expect(outcome.results).toHaveLength(5);
-    expect(store.listScreeningResults()).toHaveLength(5);
+    expect(await store.listScreeningResults()).toHaveLength(5);
   });
 
-  test('a non-candidate (Lumen Photonics, H01S) is logged as downranked, not deleted', () => {
-    const { store, weekDocs } = ingestedWeek();
+  test('a non-candidate (Lumen Photonics, H01S) is logged as downranked, not deleted', async () => {
+    const { store, weekDocs } = await ingestedWeek();
 
-    const outcome = screenDocuments(store, M1_WATCHLIST, weekDocs, classifier, budget);
+    const outcome = await screenDocuments(store, M1_WATCHLIST, weekDocs, classifier, budget);
 
     const lumen = outcome.results.find((r) => r.docId === 'US-12790902-B2');
     expect(lumen).toMatchObject({
@@ -65,10 +68,10 @@ describe('screening logs every document (invariant 3: never silently drop)', () 
 });
 
 describe('union routing: CPC ∪ embedding ∪ named assignee', () => {
-  test('a doc outside the CPC space still surfaces via the embedding arm (Helix)', () => {
-    const { store, weekDocs } = ingestedWeek();
+  test('a doc outside the CPC space still surfaces via the embedding arm (Helix)', async () => {
+    const { store, weekDocs } = await ingestedWeek();
 
-    const outcome = screenDocuments(store, M1_WATCHLIST, weekDocs, classifier, budget);
+    const outcome = await screenDocuments(store, M1_WATCHLIST, weekDocs, classifier, budget);
 
     const helix = outcome.results.find((r) => r.docId === 'US-20260179001-A1');
     expect(helix?.matchedBy).toEqual(['embedding']);
@@ -76,10 +79,10 @@ describe('union routing: CPC ∪ embedding ∪ named assignee', () => {
     expect(helix?.decision).toBe('surface');
   });
 
-  test('CPC-matched G06N grants are classified in-scope and surfaced', () => {
-    const { store, weekDocs } = ingestedWeek();
+  test('CPC-matched G06N grants are classified in-scope and surfaced', async () => {
+    const { store, weekDocs } = await ingestedWeek();
 
-    const outcome = screenDocuments(store, M1_WATCHLIST, weekDocs, classifier, budget);
+    const outcome = await screenDocuments(store, M1_WATCHLIST, weekDocs, classifier, budget);
 
     for (const docId of ['US-12790314-B2', 'US-12790881-B2']) {
       const row = outcome.results.find((r) => r.docId === docId);
@@ -91,10 +94,10 @@ describe('union routing: CPC ∪ embedding ∪ named assignee', () => {
 });
 
 describe('named-competitor bypass (invariant 3)', () => {
-  test('a named assignee surfaces even when the classifier rejects everything', () => {
-    const { store, weekDocs } = ingestedWeek();
+  test('a named assignee surfaces even when the classifier rejects everything', async () => {
+    const { store, weekDocs } = await ingestedWeek();
 
-    const outcome = screenDocuments(
+    const outcome = await screenDocuments(
       store,
       M1_WATCHLIST,
       weekDocs,
@@ -108,10 +111,10 @@ describe('named-competitor bypass (invariant 3)', () => {
     expect(outcome.surfaced.map((d) => d.docId)).toContain('US-20260178442-A1');
   });
 
-  test('a hostile classifier downranks candidates but every row stays logged', () => {
-    const { store, weekDocs } = ingestedWeek();
+  test('a hostile classifier downranks candidates but every row stays logged', async () => {
+    const { store, weekDocs } = await ingestedWeek();
 
-    const outcome = screenDocuments(
+    const outcome = await screenDocuments(
       store,
       M1_WATCHLIST,
       weekDocs,
@@ -131,18 +134,18 @@ describe('named-competitor bypass (invariant 3)', () => {
 });
 
 describe('screening budget cap (invariant 7)', () => {
-  test('exceeding the weekly token budget halts the step with an alert error', () => {
-    const { store, weekDocs } = ingestedWeek();
+  test('exceeding the weekly token budget halts the step with an alert error', async () => {
+    const { store, weekDocs } = await ingestedWeek();
 
-    expect(() =>
+    await expect(
       screenDocuments(store, M1_WATCHLIST, weekDocs, classifier, { limit: 10, used: 0 }),
-    ).toThrow(BudgetExceededError);
+    ).rejects.toThrow(BudgetExceededError);
   });
 
-  test('classifier spend is tracked and stays under the M1 budget', () => {
-    const { store, weekDocs } = ingestedWeek();
+  test('classifier spend is tracked and stays under the M1 budget', async () => {
+    const { store, weekDocs } = await ingestedWeek();
 
-    const outcome = screenDocuments(store, M1_WATCHLIST, weekDocs, classifier, budget);
+    const outcome = await screenDocuments(store, M1_WATCHLIST, weekDocs, classifier, budget);
 
     expect(outcome.budget.used).toBeGreaterThan(0);
     expect(outcome.budget.used).toBeLessThanOrEqual(outcome.budget.limit);

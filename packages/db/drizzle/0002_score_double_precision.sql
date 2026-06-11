@@ -1,0 +1,2 @@
+ALTER TABLE "screening_result" ALTER COLUMN "embedding_score" SET DATA TYPE double precision;--> statement-breakpoint
+ALTER TABLE "screening_result" ALTER COLUMN "confidence" SET DATA TYPE double precision;

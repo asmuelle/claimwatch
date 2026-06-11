@@ -6,8 +6,7 @@
 import { createHash } from 'node:crypto';
 import { classifyClaimDiff, parseUsptoXml } from '@claimwatch/core';
 import type { ParsedClaim, ParsedDocument } from '@claimwatch/core';
-import type { MemoryStore } from '../store/memoryStore';
-import type { ClaimVersionRow } from '../store/types';
+import type { ClaimVersionRow, SliceStore } from '../store/types';
 import type { LoadedDelta } from './loadDelta';
 
 export interface IngestCounts {
@@ -32,19 +31,19 @@ function toParsedClaim(row: ClaimVersionRow): ParsedClaim {
   };
 }
 
-function appendVersionsAndDiffs(
-  store: MemoryStore,
+async function appendVersionsAndDiffs(
+  store: SliceStore,
   doc: ParsedDocument,
-): { readonly versions: number; readonly diffs: number } {
+): Promise<{ readonly versions: number; readonly diffs: number }> {
   const familyId = doc.applicationNumber;
   const previousByClaim = new Map(
-    store.latestClaimVersions(familyId).map((row) => [row.claimNumber, row]),
+    (await store.latestClaimVersions(familyId)).map((row) => [row.claimNumber, row]),
   );
   let versions = 0;
   let diffs = 0;
   for (const claim of doc.claims) {
     const previous = previousByClaim.get(claim.number);
-    const inserted = store.appendClaimVersion({
+    const inserted = await store.appendClaimVersion({
       familyId,
       docId: doc.docId,
       claimNumber: claim.number,
@@ -59,7 +58,7 @@ function appendVersionsAndDiffs(
       toClaim: claim,
     });
     if (change.change === 'unchanged') continue;
-    store.appendClaimDiff({
+    await store.appendClaimDiff({
       familyId,
       fromVersionId: previous?.id ?? null,
       toVersionId: inserted.id,
@@ -77,19 +76,19 @@ function appendVersionsAndDiffs(
  * Ingests one delta into the store. Documents whose content hash is already
  * recorded are skipped wholesale — re-running a delta adds zero rows.
  */
-export function ingestDelta(store: MemoryStore, delta: LoadedDelta): IngestCounts {
+export async function ingestDelta(store: SliceStore, delta: LoadedDelta): Promise<IngestCounts> {
   let documentsAdded = 0;
   let documentsSkipped = 0;
   let claimVersionsAdded = 0;
   let claimDiffsComputed = 0;
   for (const file of delta.files) {
     const contentHash = sha256(file.xml);
-    if (store.hasContentHash(contentHash)) {
+    if (await store.hasContentHash(contentHash)) {
       documentsSkipped += 1;
       continue;
     }
     const parsed = parseUsptoXml(file.xml);
-    store.appendDocument({
+    await store.appendDocument({
       docId: parsed.docId,
       source: parsed.source,
       docNumber: parsed.docNumber,
@@ -103,7 +102,7 @@ export function ingestDelta(store: MemoryStore, delta: LoadedDelta): IngestCount
       rawKey: `uspto/${parsed.docId}/${delta.manifest.published}/${file.path}`,
     });
     documentsAdded += 1;
-    const { versions, diffs } = appendVersionsAndDiffs(store, parsed);
+    const { versions, diffs } = await appendVersionsAndDiffs(store, parsed);
     claimVersionsAdded += versions;
     claimDiffsComputed += diffs;
   }

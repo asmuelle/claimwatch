@@ -15,8 +15,7 @@ import type {
   CitationRef,
   CoverageDisclosure,
 } from '@claimwatch/core';
-import type { MemoryStore } from '../store/memoryStore';
-import type { ClaimDiffRow, StoredDocument } from '../store/types';
+import type { ClaimDiffRow, SliceStore, StoredDocument } from '../store/types';
 import { spendTokens } from '../llm/types';
 import type { BriefSynthesizer, TokenBudget } from '../llm/types';
 import type { WatchlistConfig } from '../triage/watchlist';
@@ -42,14 +41,18 @@ function headlineFor(diff: ClaimDiffRow, publicationDate: string): string {
   return `Claim ${diff.claimNumber} ${verb} on ${publicationDate}: ${renderBlacklineText(diff.hunks)}`;
 }
 
-function diffFacts(store: MemoryStore, weekDocs: readonly StoredDocument[]): BriefItemFact[] {
+async function diffFacts(
+  store: SliceStore,
+  weekDocs: readonly StoredDocument[],
+): Promise<BriefItemFact[]> {
   const docsById = new Map(weekDocs.map((doc) => [doc.docId, doc]));
+  const versionsById = new Map((await store.listClaimVersions()).map((row) => [row.id, row]));
   const facts: BriefItemFact[] = [];
-  for (const diff of store.listClaimDiffs()) {
+  for (const diff of await store.listClaimDiffs()) {
     // Only diffs against a prior version are amendment facts; 'added' hunks on
     // first capture belong to new-filing facts instead.
     if (diff.fromVersionId === null) continue;
-    const version = store.listClaimVersions().find((row) => row.id === diff.toVersionId);
+    const version = versionsById.get(diff.toVersionId);
     const doc = version ? docsById.get(version.docId) : undefined;
     if (!version || !doc) continue;
     facts.push({
@@ -67,16 +70,17 @@ function diffFacts(store: MemoryStore, weekDocs: readonly StoredDocument[]): Bri
   return facts;
 }
 
-function newFilingFacts(
-  store: MemoryStore,
+async function newFilingFacts(
+  store: SliceStore,
   surfaced: readonly StoredDocument[],
   watchlist: WatchlistConfig,
-): BriefItemFact[] {
+): Promise<BriefItemFact[]> {
+  const allVersions = await store.listClaimVersions();
   const facts: BriefItemFact[] = [];
   for (const doc of surfaced) {
-    const hasPriorVersion = store
-      .listClaimVersions()
-      .some((row) => row.familyId === doc.applicationNumber && row.docId !== doc.docId);
+    const hasPriorVersion = allVersions.some(
+      (row) => row.familyId === doc.applicationNumber && row.docId !== doc.docId,
+    );
     if (hasPriorVersion) continue; // amendments are covered by diff facts
     const isNamedCompetitor = watchlist.namedAssignees.includes(doc.assignee);
     facts.push({
@@ -92,11 +96,12 @@ function newFilingFacts(
 }
 
 /** Citation context: every stored doc with the claim numbers it published. */
-export function buildCitationContext(store: MemoryStore): CitationContext {
+export async function buildCitationContext(store: SliceStore): Promise<CitationContext> {
+  const allVersions = await store.listClaimVersions();
   const documents = new Map<string, CitationContextEntry>();
-  for (const doc of store.listDocuments()) {
+  for (const doc of await store.listDocuments()) {
     const claimNumbers = new Set<number>();
-    for (const version of store.listClaimVersions()) {
+    for (const version of allVersions) {
       if (version.docId === doc.docId) claimNumbers.add(version.claimNumber);
     }
     documents.set(doc.docId, { publicationDate: doc.publicationDate, claimNumbers });
@@ -133,7 +138,7 @@ export function pinCitations(brief: Brief): readonly PinnedCitation[] {
 }
 
 export interface SynthesizeBriefInput {
-  readonly store: MemoryStore;
+  readonly store: SliceStore;
   readonly watchlist: WatchlistConfig;
   readonly weekDocs: readonly StoredDocument[];
   readonly surfaced: readonly StoredDocument[];
@@ -145,14 +150,12 @@ export interface SynthesizeBriefInput {
 }
 
 /** Assembles the validated weekly brief from stored facts. */
-export function synthesizeBrief(input: SynthesizeBriefInput): SynthesisResult {
+export async function synthesizeBrief(input: SynthesizeBriefInput): Promise<SynthesisResult> {
   const surfacedIds = new Set(input.surfaced.map((doc) => doc.docId));
   const facts = [
-    ...diffFacts(input.store, input.weekDocs).filter((fact) => surfacedIds.has(fact.docId)),
-    ...newFilingFacts(input.store, input.surfaced, input.watchlist),
-  ].sort(
-    (a, b) => a.docId.localeCompare(b.docId) || (a.claimNumber ?? 0) - (b.claimNumber ?? 0),
-  );
+    ...(await diffFacts(input.store, input.weekDocs)).filter((fact) => surfacedIds.has(fact.docId)),
+    ...(await newFilingFacts(input.store, input.surfaced, input.watchlist)),
+  ].sort((a, b) => a.docId.localeCompare(b.docId) || (a.claimNumber ?? 0) - (b.claimNumber ?? 0));
 
   let budget = input.budget;
   const drafts: BriefItemDraft[] = facts.map((fact) => {
@@ -169,7 +172,7 @@ export function synthesizeBrief(input: SynthesizeBriefInput): SynthesisResult {
     watchlistName: input.watchlist.name,
     weekOf: input.weekOf,
     drafts,
-    citationContext: buildCitationContext(input.store),
+    citationContext: await buildCitationContext(input.store),
     coverage,
     nowIso: input.nowIso,
   });

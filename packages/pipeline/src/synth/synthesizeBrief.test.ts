@@ -11,8 +11,8 @@ function happySlice() {
 }
 
 describe('brief assembly over the fixture week', () => {
-  test('produces six items: four claim changes and two new publications', () => {
-    const slice = happySlice();
+  test('produces six items: four claim changes and two new publications', async () => {
+    const slice = await happySlice();
 
     expect(slice.brief.items.map((i) => [i.fact.docId, i.fact.kind, i.fact.claimNumber])).toEqual([
       ['US-12790314-B2', 'claim-amended', 1],
@@ -24,8 +24,8 @@ describe('brief assembly over the fixture week', () => {
     ]);
   });
 
-  test('every item carries a deterministic headline even when prose survives', () => {
-    const slice = happySlice();
+  test('every item carries a deterministic headline even when prose survives', async () => {
+    const slice = await happySlice();
 
     for (const item of slice.brief.items) {
       expect(item.fact.headline.length).toBeGreaterThan(0);
@@ -35,8 +35,8 @@ describe('brief assembly over the fixture week', () => {
     expect(amended?.fact.headline).toContain('[-scores;-]');
   });
 
-  test('a fully cited week validates: validatedAt set, nothing dropped', () => {
-    const slice = happySlice();
+  test('a fully cited week validates: validatedAt set, nothing dropped', async () => {
+    const slice = await happySlice();
 
     expect(slice.brief.droppedSentenceCount).toBe(0);
     expect(slice.brief.validatedAt).toBe(NOW);
@@ -44,8 +44,8 @@ describe('brief assembly over the fixture week', () => {
 });
 
 describe('citation span pinning', () => {
-  test('every kept sentence has every citation pinned to an exact span', () => {
-    const slice = happySlice();
+  test('every kept sentence has every citation pinned to an exact span', async () => {
+    const slice = await happySlice();
 
     expect(slice.pinnedCitations.length).toBeGreaterThan(0);
     for (const pin of slice.pinnedCitations) {
@@ -55,8 +55,8 @@ describe('citation span pinning', () => {
     }
   });
 
-  test('pinned citations reference only documents that exist in the store', () => {
-    const slice = happySlice();
+  test('pinned citations reference only documents that exist in the store', async () => {
+    const slice = await happySlice();
     const docIds = new Set(slice.documents.map((d) => d.docId));
 
     for (const pin of slice.pinnedCitations) {
@@ -66,7 +66,7 @@ describe('citation span pinning', () => {
 });
 
 describe('cite-or-omit gate (invariant 2)', () => {
-  test('a seeded invalid citation blocks validation: validatedAt stays null', () => {
+  test('a seeded invalid citation blocks validation: validatedAt stays null', async () => {
     const corrupting = new FaultInjectingSynthesizer(
       new MockBriefSynthesizer(),
       (fact, sentences) =>
@@ -78,7 +78,7 @@ describe('cite-or-omit gate (invariant 2)', () => {
           : sentences,
     );
 
-    const slice = runSlice({
+    const slice = await runSlice({
       fixturesDir: USPTO_FIXTURES_DIR,
       nowIso: NOW,
       synthesizer: corrupting,
@@ -93,7 +93,7 @@ describe('cite-or-omit gate (invariant 2)', () => {
     expect(item?.fact.headline).toContain('Claim 1');
   });
 
-  test('a fabricated document id is caught and the sentence dropped', () => {
+  test('a fabricated document id is caught and the sentence dropped', async () => {
     const fabricating = new FaultInjectingSynthesizer(
       new MockBriefSynthesizer(),
       (fact, sentences) =>
@@ -105,7 +105,7 @@ describe('cite-or-omit gate (invariant 2)', () => {
           : sentences,
     );
 
-    const slice = runSlice({
+    const slice = await runSlice({
       fixturesDir: USPTO_FIXTURES_DIR,
       nowIso: NOW,
       synthesizer: fabricating,
@@ -117,12 +117,12 @@ describe('cite-or-omit gate (invariant 2)', () => {
     expect(item?.sentences[0]?.citations[0]?.status).toBe('unknown-document');
   });
 
-  test('an uncited sentence is dropped, never sent', () => {
+  test('an uncited sentence is dropped, never sent', async () => {
     const uncited = new FaultInjectingSynthesizer(new MockBriefSynthesizer(), (_fact, sentences) =>
       sentences.map((s) => ({ ...s, citations: [] })),
     );
 
-    const slice = runSlice({
+    const slice = await runSlice({
       fixturesDir: USPTO_FIXTURES_DIR,
       nowIso: NOW,
       synthesizer: uncited,
@@ -134,7 +134,7 @@ describe('cite-or-omit gate (invariant 2)', () => {
 });
 
 describe('language policy gate (invariant 4)', () => {
-  test('a banned phrase in model output fails assembly for that sentence', () => {
+  test('a banned phrase in model output fails assembly for that sentence', async () => {
     const opinionated = new FaultInjectingSynthesizer(
       new MockBriefSynthesizer(),
       (fact, sentences) =>
@@ -146,7 +146,7 @@ describe('language policy gate (invariant 4)', () => {
           : sentences,
     );
 
-    const slice = runSlice({
+    const slice = await runSlice({
       fixturesDir: USPTO_FIXTURES_DIR,
       nowIso: NOW,
       synthesizer: opinionated,
@@ -158,8 +158,8 @@ describe('language policy gate (invariant 4)', () => {
     expect(item?.sentences[0]?.droppedReason).toBe('banned-phrase');
   });
 
-  test('the counsel disclaimer and coverage disclosure ride on every brief', () => {
-    const slice = happySlice();
+  test('the counsel disclaimer and coverage disclosure ride on every brief', async () => {
+    const slice = await happySlice();
 
     expect(slice.brief.disclaimer).toMatch(/not legal advice/);
     expect(slice.brief.coverage.watched.length).toBeGreaterThan(0);
@@ -170,14 +170,14 @@ describe('language policy gate (invariant 4)', () => {
 });
 
 describe('synthesis budget cap (invariant 7)', () => {
-  test('exceeding the synthesis budget halts with an alert error', () => {
+  test('exceeding the synthesis budget halts with an alert error', async () => {
     const watchlist = {
-      ...happySlice().watchlist,
+      ...(await happySlice()).watchlist,
       synthesisTokenBudget: 5,
     };
 
-    expect(() =>
+    await expect(
       runSlice({ fixturesDir: USPTO_FIXTURES_DIR, nowIso: NOW, watchlist }),
-    ).toThrow(BudgetExceededError);
+    ).rejects.toThrow(BudgetExceededError);
   });
 });

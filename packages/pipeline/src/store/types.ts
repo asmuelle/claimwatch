@@ -1,4 +1,4 @@
-/** Row types for the in-memory slice store (mirrors packages/db tables). */
+/** Row types and the storage port shared by the in-memory and Drizzle stores. */
 import type { ClaimStatus, DiffHunk, StructuralChange } from '@claimwatch/core';
 
 export interface StoredDocument {
@@ -52,4 +52,32 @@ export interface ScreeningResultRow {
   readonly decision: 'surface' | 'downrank';
   readonly model: string;
   readonly promptVersion: string;
+}
+
+/**
+ * Storage port for the vertical slice (repository pattern). Implemented by
+ * MemoryStore (fixture/unit runs) and DrizzleSliceStore (live Postgres).
+ *
+ * The surface is append-only by construction: there is no update or delete
+ * method anywhere (product invariant 5). All methods are async so the same
+ * pipeline code runs unchanged against memory and a real database.
+ */
+export interface SliceStore {
+  /** True when this content hash has already been ingested (idempotency key). */
+  hasContentHash(contentHash: string): Promise<boolean>;
+  /**
+   * Appends a document. A duplicate content hash is an idempotent no-op;
+   * a duplicate docId with DIFFERENT content is an append-only violation.
+   */
+  appendDocument(doc: StoredDocument): Promise<{ readonly inserted: boolean }>;
+  getDocument(docId: string): Promise<StoredDocument | undefined>;
+  listDocuments(): Promise<readonly StoredDocument[]>;
+  appendClaimVersion(row: Omit<ClaimVersionRow, 'id'>): Promise<ClaimVersionRow>;
+  /** Latest version per claim for a family, ordered by claim number. */
+  latestClaimVersions(familyId: string): Promise<readonly ClaimVersionRow[]>;
+  listClaimVersions(): Promise<readonly ClaimVersionRow[]>;
+  appendClaimDiff(row: Omit<ClaimDiffRow, 'id'>): Promise<ClaimDiffRow>;
+  listClaimDiffs(): Promise<readonly ClaimDiffRow[]>;
+  appendScreeningResult(row: Omit<ScreeningResultRow, 'id'>): Promise<ScreeningResultRow>;
+  listScreeningResults(): Promise<readonly ScreeningResultRow[]>;
 }

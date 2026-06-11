@@ -12,8 +12,8 @@ import { ScreeningTable } from '../components/ScreeningTable';
 
 const FIXTURES_DIR = join(process.cwd(), '..', '..', 'fixtures', 'uspto');
 
-export default function HomePage() {
-  const slice = runSlice({ fixturesDir: FIXTURES_DIR });
+export default async function HomePage() {
+  const slice = await runSlice({ fixturesDir: FIXTURES_DIR });
   const { brief } = slice;
 
   return (

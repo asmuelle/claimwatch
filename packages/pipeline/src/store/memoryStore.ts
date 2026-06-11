@@ -1,14 +1,17 @@
 /**
- * Append-only in-memory store for the fixture-driven M1 slice.
+ * Append-only in-memory store for the fixture-driven slice.
  *
- * Mirrors the packages/db tables without requiring Postgres (tests and the
- * read-only web render run against this). Append-only semantics are enforced
- * at the API surface: there is no update or delete method anywhere.
+ * Mirrors the packages/db tables without requiring Postgres (unit tests and
+ * the read-only web render run against this). Append-only semantics are
+ * enforced at the API surface: there is no update or delete method anywhere.
+ * Implements the same async SliceStore port as the Drizzle repository so the
+ * pipeline code is byte-identical across both backends.
  */
 import type {
   ClaimDiffRow,
   ClaimVersionRow,
   ScreeningResultRow,
+  SliceStore,
   StoredDocument,
 } from './types';
 
@@ -19,7 +22,7 @@ export class AppendOnlyViolationError extends Error {
   }
 }
 
-export class MemoryStore {
+export class MemoryStore implements SliceStore {
   private readonly documentsByHash = new Map<string, StoredDocument>();
   private readonly documentsById = new Map<string, StoredDocument>();
   private readonly claimVersions: ClaimVersionRow[] = [];
@@ -27,7 +30,7 @@ export class MemoryStore {
   private readonly screeningResults: ScreeningResultRow[] = [];
 
   /** True when this content hash has already been ingested (idempotency key). */
-  hasContentHash(contentHash: string): boolean {
+  async hasContentHash(contentHash: string): Promise<boolean> {
     return this.documentsByHash.has(contentHash);
   }
 
@@ -35,7 +38,7 @@ export class MemoryStore {
    * Appends a document. A duplicate content hash is an idempotent no-op;
    * a duplicate docId with DIFFERENT content is an append-only violation.
    */
-  appendDocument(doc: StoredDocument): { readonly inserted: boolean } {
+  async appendDocument(doc: StoredDocument): Promise<{ readonly inserted: boolean }> {
     if (this.documentsByHash.has(doc.contentHash)) {
       return { inserted: false };
     }
@@ -49,15 +52,15 @@ export class MemoryStore {
     return { inserted: true };
   }
 
-  getDocument(docId: string): StoredDocument | undefined {
+  async getDocument(docId: string): Promise<StoredDocument | undefined> {
     return this.documentsById.get(docId);
   }
 
-  listDocuments(): readonly StoredDocument[] {
+  async listDocuments(): Promise<readonly StoredDocument[]> {
     return [...this.documentsById.values()];
   }
 
-  appendClaimVersion(row: Omit<ClaimVersionRow, 'id'>): ClaimVersionRow {
+  async appendClaimVersion(row: Omit<ClaimVersionRow, 'id'>): Promise<ClaimVersionRow> {
     const duplicate = this.claimVersions.some(
       (existing) =>
         existing.familyId === row.familyId &&
@@ -75,7 +78,7 @@ export class MemoryStore {
   }
 
   /** Latest version per claim for a family, ordered by claim number. */
-  latestClaimVersions(familyId: string): readonly ClaimVersionRow[] {
+  async latestClaimVersions(familyId: string): Promise<readonly ClaimVersionRow[]> {
     const latest = new Map<number, ClaimVersionRow>();
     for (const row of this.claimVersions) {
       if (row.familyId !== familyId) continue;
@@ -87,27 +90,27 @@ export class MemoryStore {
     return [...latest.values()].sort((a, b) => a.claimNumber - b.claimNumber);
   }
 
-  listClaimVersions(): readonly ClaimVersionRow[] {
+  async listClaimVersions(): Promise<readonly ClaimVersionRow[]> {
     return [...this.claimVersions];
   }
 
-  appendClaimDiff(row: Omit<ClaimDiffRow, 'id'>): ClaimDiffRow {
+  async appendClaimDiff(row: Omit<ClaimDiffRow, 'id'>): Promise<ClaimDiffRow> {
     const inserted: ClaimDiffRow = { ...row, id: this.claimDiffs.length + 1 };
     this.claimDiffs.push(inserted);
     return inserted;
   }
 
-  listClaimDiffs(): readonly ClaimDiffRow[] {
+  async listClaimDiffs(): Promise<readonly ClaimDiffRow[]> {
     return [...this.claimDiffs];
   }
 
-  appendScreeningResult(row: Omit<ScreeningResultRow, 'id'>): ScreeningResultRow {
+  async appendScreeningResult(row: Omit<ScreeningResultRow, 'id'>): Promise<ScreeningResultRow> {
     const inserted: ScreeningResultRow = { ...row, id: this.screeningResults.length + 1 };
     this.screeningResults.push(inserted);
     return inserted;
   }
 
-  listScreeningResults(): readonly ScreeningResultRow[] {
+  async listScreeningResults(): Promise<readonly ScreeningResultRow[]> {
     return [...this.screeningResults];
   }
 }

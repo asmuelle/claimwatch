@@ -45,11 +45,15 @@ db-down: _compose
 migrate: _bootstrapped
     pnpm --filter @claimwatch/db migrate
 
-# run unit tests across all packages (vitest)
+# run unit tests across all packages (vitest; DB suites skip without DATABASE_URL)
 test: _bootstrapped
     pnpm test
 
-# run Playwright end-to-end tests (apps/web)
+# run DB-backed integration tests against live Postgres (`just db-up` first)
+test-db: _bootstrapped
+    DATABASE_URL="${DATABASE_URL:-postgres://claimwatch:claimwatch@localhost:5433/claimwatch}" pnpm test:db
+
+# run Playwright end-to-end tests (builds apps/web, serves it, tests, stops it)
 e2e: _bootstrapped
     pnpm e2e
 

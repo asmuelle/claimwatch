@@ -7,10 +7,10 @@
  * is a no-op (content-hash keyed).
  */
 import {
+  doublePrecision,
   integer,
   jsonb,
   pgTable,
-  real,
   serial,
   text,
   timestamp,
@@ -107,7 +107,11 @@ export const claimDiff = pgTable('claim_diff', {
   /** Structural heuristic tag (narrowed/broadened/cancelled/added/...). */
   change: text('change').notNull(),
   /** Deterministic word-level hunks (JSON), pure function of the two texts. */
-  hunks: jsonb('hunks').notNull(),
+  hunks: jsonb('hunks')
+    // Structurally identical to DiffHunk in @claimwatch/core (kept local so
+    // the schema package has zero workspace dependencies).
+    .$type<readonly { readonly op: 'equal' | 'delete' | 'insert'; readonly text: string }[]>()
+    .notNull(),
   /**
    * SEPARATE nullable LLM annotation — never merged with the deterministic
    * fields above (DESIGN.md decision log).
@@ -125,10 +129,12 @@ export const screeningResult = pgTable('screening_result', {
   watchlistId: text('watchlist_id')
     .notNull()
     .references(() => watchlist.id),
-  embeddingScore: real('embedding_score').notNull(),
+  // double precision (not float4): scores round-trip bit-exactly from JS,
+  // which the byte-identical re-run guarantee depends on.
+  embeddingScore: doublePrecision('embedding_score').notNull(),
   matchedBy: jsonb('matched_by').$type<readonly string[]>().notNull(),
   verdict: text('verdict', { enum: ['in-scope', 'adjacent', 'out-of-scope'] }).notNull(),
-  confidence: real('confidence').notNull(),
+  confidence: doublePrecision('confidence').notNull(),
   rationale: text('rationale').notNull(),
   decision: text('decision', { enum: ['surface', 'downrank'] }).notNull(),
   model: text('model').notNull(),

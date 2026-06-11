@@ -8,6 +8,6 @@ export default defineConfig({
   schema: './src/schema.ts',
   out: './drizzle',
   dbCredentials: {
-    url: process.env.DATABASE_URL ?? 'postgres://claimwatch:claimwatch@localhost:5432/claimwatch',
+    url: process.env.DATABASE_URL ?? 'postgres://claimwatch:claimwatch@localhost:5433/claimwatch',
   },
 });

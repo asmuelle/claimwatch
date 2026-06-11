@@ -10,10 +10,11 @@
     "dev": "pnpm --filter @claimwatch/web dev",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "typecheck": "pnpm -r typecheck",
+    "typecheck": "pnpm -r typecheck && tsc -p e2e/tsconfig.json",
     "test": "vitest run",
-    "e2e": "echo 'e2e: Playwright suite is deferred to M2 — kept out of the lean M1 dependency set (see DESIGN.md milestones).'",
-    "build": "pnpm -r build"
+    "e2e": "pnpm --filter @claimwatch/web build && playwright test",
+    "build": "pnpm -r build",
+    "test:db": "vitest run db.test.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
@@ -22,6 +23,7 @@
     "prettier": "^3.5.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.33.0",
-    "vitest": "^3.2.0"
+    "vitest": "^3.2.0",
+    "@playwright/test": "^1.53.0"
   }
 }
