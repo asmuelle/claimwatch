@@ -5,7 +5,7 @@
 **ClaimWatch** is a patent/IP radar for IP-heavy startups and boutique patent law firms: a weekly pipeline over canonical USPTO/EPO/litigation feeds that maintains living claim-evolution dossiers per family and competitor, and ships a weekly email brief where **every assertion is mechanically checkable** against the source document, claim number, and date.
 
 - **Who pays:** founders/CTOs/in-house counsel at deeptech, biotech, hardware, and AI startups ($149–399/mo), and boutique IP firms reselling white-label briefs ($1,250/mo + per-workspace meter).
-- **Status:** Tier 1 candidate (#1 of 12 finalists, survived adversarial platform-risk review). M0 (bootstrap), M1 (fixture-driven vertical slice), and M2 (trust layer: live Postgres path, DB-level append-only triggers, hard send-gate, recall eval, Playwright e2e) are landed. Next: live ODP/Anthropic/Resend clients + Inngest wiring, then DESIGN.md milestone M3.
+- **Status:** Tier 1 candidate (#1 of 12 finalists, survived adversarial platform-risk review). M0 (bootstrap), M1 (fixture-driven vertical slice), M2 (trust layer: live Postgres path, DB-level append-only triggers, hard send-gate, recall eval, Playwright e2e), and the M3 monetization core (plan entitlements + proration-free subscription state machine in `packages/core`, `BillingProvider` seam with deterministic mock and config-gated Stripe skeleton, watchlist management UI with limit-driven upgrade prompts, Pro+ counsel export with Firm white-label) are landed. Still open from M3: live Stripe checkout/webhooks + Firm workspace metering, Diligence Snapshot checkout, CourtListener/RECAP litigation feed behind the PACER cap; plus live ODP/Anthropic/Resend clients + Inngest wiring.
 
 ## Read first
 

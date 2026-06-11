@@ -302,3 +302,399 @@ footer {
 footer p {
   max-width: var(--measure-prose);
 }
+
+/* ---------------------------------------------------------------- M3 ---- */
+
+/* Site navigation (masthead chrome) */
+.site-nav {
+  display: flex;
+  gap: var(--space-block);
+  font-size: var(--text-small);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-top: var(--space-tight);
+}
+
+.site-nav a {
+  color: var(--color-ink-muted);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  padding-bottom: var(--space-hairline);
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  color: var(--color-ink);
+  background: none;
+  border-bottom-color: var(--color-insertion);
+}
+
+.site-nav a[aria-current='page'] {
+  color: var(--color-ink);
+  border-bottom-color: var(--color-ink);
+}
+
+.org-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-tight);
+  margin-top: var(--space-tight);
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+}
+
+.org-switcher a[aria-current='page'] {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.plan-line {
+  font-weight: 600;
+}
+
+/* Watchlist cards */
+.watchlist-card {
+  border: 1px solid var(--color-rule);
+  border-left: 4px solid var(--color-ink);
+  background: var(--color-paper-raised);
+  padding: var(--space-block);
+  margin-bottom: var(--space-block);
+}
+
+.watchlist-card[data-frozen] {
+  border-left-color: var(--color-rule);
+  color: var(--color-ink-muted);
+}
+
+.watchlist-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-tight);
+}
+
+.watchlist-card h3 {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+.frozen-tag {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  color: var(--color-deletion);
+}
+
+.edit-link {
+  font-size: var(--text-small);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.watchlist-description {
+  max-width: var(--measure-prose);
+  margin: var(--space-tight) 0;
+}
+
+.watchlist-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--space-tight) var(--space-block);
+  margin: 0;
+}
+
+.watchlist-facts dt {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+}
+
+.watchlist-facts dd {
+  margin: var(--space-hairline) 0 0;
+}
+
+.empty-note {
+  color: var(--color-ink-muted);
+  font-style: italic;
+}
+
+/* Watchlist form */
+.watchlist-form {
+  max-width: var(--measure-prose);
+}
+
+.watchlist-form .field {
+  margin-bottom: var(--space-block);
+}
+
+.watchlist-form label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  margin-bottom: var(--space-hairline);
+}
+
+.watchlist-form input[type='text'],
+.watchlist-form textarea {
+  width: 100%;
+  border: 1px solid var(--color-rule);
+  border-radius: 0;
+  background: var(--color-paper-raised);
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  padding: var(--space-tight);
+}
+
+.watchlist-form input[type='text']:focus-visible,
+.watchlist-form textarea:focus-visible {
+  outline: 2px solid var(--color-insertion);
+  outline-offset: 1px;
+}
+
+.field-hint {
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+  margin: var(--space-hairline) 0 0;
+}
+
+.watchlist-form button[type='submit'] {
+  border: 2px solid var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-serif);
+  font-size: var(--text-base);
+  font-weight: 600;
+  padding: var(--space-tight) var(--space-block);
+  cursor: pointer;
+}
+
+.watchlist-form button[type='submit']:hover,
+.watchlist-form button[type='submit']:focus-visible {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  outline: none;
+}
+
+.watchlist-form button[type='submit']:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.form-saved {
+  color: var(--color-insertion);
+  font-weight: 600;
+}
+
+.form-issues {
+  border-left: 4px solid var(--color-alert);
+  background: var(--color-deletion-wash);
+  list-style: none;
+  margin: var(--space-block) 0 0;
+  padding: var(--space-tight) var(--space-block);
+}
+
+.form-issues strong {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+}
+
+/* Upgrade prompt — the designed limit surface, never an error dump */
+.upgrade-prompt {
+  border: 3px double var(--color-ink);
+  background: var(--color-paper-raised);
+  padding: var(--space-block);
+  margin-top: var(--space-block);
+  max-width: var(--measure-prose);
+}
+
+.upgrade-kicker {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-alert);
+  margin: 0;
+}
+
+.upgrade-prompt h3 {
+  margin: var(--space-hairline) 0 var(--space-tight);
+  font-size: 1.25rem;
+}
+
+.upgrade-detail {
+  margin: 0 0 var(--space-block);
+}
+
+.tier-ladder {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--color-rule);
+}
+
+.tier {
+  display: grid;
+  gap: var(--space-hairline);
+  padding: var(--space-tight) 0;
+  border-bottom: 1px solid var(--color-rule);
+}
+
+.tier[data-suggested] {
+  background: var(--color-insertion-wash);
+  border-left: 4px solid var(--color-insertion);
+  padding-left: var(--space-tight);
+}
+
+.tier[data-current] {
+  color: var(--color-ink-muted);
+}
+
+.tier-name {
+  font-weight: 600;
+}
+
+.tier-name em {
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+}
+
+.tier[data-suggested] .tier-name em {
+  color: var(--color-insertion);
+}
+
+.tier-price small {
+  color: var(--color-ink-muted);
+}
+
+.tier-note {
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+}
+
+.upgrade-footnote {
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+  margin: var(--space-block) 0 0;
+}
+
+/* Counsel export artifact — screen view */
+.export-brief {
+  border: 1px solid var(--color-rule);
+  background: var(--color-paper-raised);
+  padding: var(--space-section) var(--space-block);
+  max-width: 50rem;
+  margin: 0 auto;
+}
+
+.export-masthead {
+  border-bottom: 3px double var(--color-ink);
+  margin-bottom: var(--space-block);
+  padding-bottom: var(--space-block);
+}
+
+.export-brand {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.export-masthead h2 {
+  margin: var(--space-hairline) 0;
+  font-size: var(--text-section);
+}
+
+.export-edition {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-tight) var(--space-block);
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+  margin: 0;
+}
+
+.export-item {
+  border-bottom: 1px solid var(--color-rule);
+  padding: var(--space-block) 0;
+}
+
+.export-item h3 {
+  font-size: 1rem;
+  max-width: var(--measure-prose);
+}
+
+.export-sentence {
+  max-width: var(--measure-prose);
+}
+
+.export-citation {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+}
+
+.export-footer {
+  margin: var(--space-block) 0 0;
+  padding: 0;
+  border-top: 3px double var(--color-ink);
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+}
+
+.print-hint {
+  font-style: italic;
+}
+
+/* Print: the artifact IS the deliverable (prosecution blackline on paper) */
+@media print {
+  :root {
+    --color-paper: #ffffff;
+    --color-paper-raised: #ffffff;
+  }
+
+  body {
+    background: #ffffff;
+    font-size: 11pt;
+  }
+
+  .site-nav,
+  .org-switcher,
+  .print-hint,
+  .export-chrome {
+    display: none;
+  }
+
+  .export-brief {
+    border: none;
+    padding: 0;
+    max-width: none;
+  }
+
+  .export-item {
+    break-inside: avoid;
+  }
+
+  .blackline del {
+    text-decoration: line-through;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .blackline ins {
+    text-decoration: underline;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}

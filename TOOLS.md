@@ -51,7 +51,7 @@ WIPO PATENTSCOPE (additional jurisdictions) is deliberately out of scope until a
 | `RESEND_API_KEY`                                                              | Brief email delivery                                  |
 | `S3_ENDPOINT` / `S3_BUCKET_RAW` / `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` | Raw document archive                                  |
 | `INNGEST_EVENT_KEY` / `INNGEST_SIGNING_KEY`                                   | Scheduler (production only; dev server needs neither) |
-| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET`                                 | Billing (M3)                                          |
+| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET`                                 | Billing (M3). Optional everywhere: when the key is absent (all dev/test/CI), `createBillingProvider` selects the deterministic mock provider — no surface ever half-configures Stripe |
 | `NEXT_PUBLIC_APP_URL`                                                         | Absolute URLs in emails/verify links                  |
 
 Values live in `.env` (gitignored); commit `.env.example` with names only. `packages/core` exposes a startup validator that fails fast on missing vars per deploy target.

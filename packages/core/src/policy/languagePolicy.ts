@@ -44,7 +44,16 @@ export function scanBannedPhrases(text: string): readonly PolicyViolation[] {
   return violations.sort((a, b) => a.index - b.index);
 }
 
-/** Counsel disclaimer carried on every brief surface (web, email, PDF). */
-export const COUNSEL_DISCLAIMER =
-  'ClaimWatch reports research observations from public patent records. ' +
-  'It is not legal advice and is no substitute for review by qualified patent counsel.';
+/**
+ * Counsel disclaimer carried on every brief surface (web, email, PDF).
+ * White-label exports re-brand the attribution but NEVER drop the
+ * disclaimer (invariant 4) — use counselDisclaimerFor.
+ */
+export function counselDisclaimerFor(brandName: string): string {
+  return (
+    `${brandName} reports research observations from public patent records. ` +
+    'It is not legal advice and is no substitute for review by qualified patent counsel.'
+  );
+}
+
+export const COUNSEL_DISCLAIMER = counselDisclaimerFor('ClaimWatch');

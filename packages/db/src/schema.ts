@@ -7,6 +7,7 @@
  * is a no-op (content-hash keyed).
  */
 import {
+  boolean,
   doublePrecision,
   integer,
   jsonb,
@@ -39,6 +40,28 @@ export const watchlist = pgTable('watchlist', {
   /** voyage-3 claim-space embedding (nullable until first embed run). */
   embedding: vector('embedding', { dimensions: 1024 }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/**
+ * Billing state per org (M3). Mutable by design — subscription lifecycle is
+ * driven by the pure state machine in @claimwatch/core (billing/subscription)
+ * and persisted here as a single row per org. This is billing state, NOT
+ * claim history: the append-only invariant does not apply.
+ */
+export const subscription = pgTable('subscription', {
+  orgId: text('org_id')
+    .primaryKey()
+    .references(() => org.id),
+  planId: text('plan_id', { enum: ['startup', 'pro', 'firm'] }).notNull(),
+  billingCycle: text('billing_cycle', { enum: ['monthly', 'annual'] }).notNull(),
+  status: text('status', { enum: ['active', 'grace', 'lapsed', 'canceled'] }).notNull(),
+  currentPeriodEnd: timestamp('current_period_end', { withTimezone: true }).notNull(),
+  graceUntil: timestamp('grace_until', { withTimezone: true }),
+  pendingPlanId: text('pending_plan_id', { enum: ['startup', 'pro', 'firm'] }),
+  cancelAtPeriodEnd: boolean('cancel_at_period_end').notNull().default(false),
+  provider: text('provider', { enum: ['mock', 'stripe'] }).notNull(),
+  providerRef: text('provider_ref'),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
 /** Canonical publication unit. Immutable — append-only, content-hash keyed. */

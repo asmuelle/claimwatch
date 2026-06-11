@@ -5,6 +5,7 @@
  * claim text rendered below.
  */
 import { join } from 'node:path';
+import Link from 'next/link';
 import { runSlice } from '@claimwatch/pipeline';
 import { BriefSection } from '../components/BriefSection';
 import { CanonicalRecord } from '../components/CanonicalRecord';
@@ -20,6 +21,13 @@ export default async function HomePage() {
     <>
       <header className="masthead">
         <h1>ClaimWatch</h1>
+        <nav aria-label="Main navigation" className="site-nav">
+          <Link href="/" aria-current="page">
+            Weekly brief
+          </Link>
+          <Link href="/watchlists">Watchlists</Link>
+          <Link href="/export">Counsel export</Link>
+        </nav>
         <p className="edition-line">
           <span>Watchlist: {slice.watchlist.name}</span>
           <span>Week of {brief.weekOf}</span>
