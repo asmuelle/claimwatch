@@ -38,9 +38,9 @@ test('Pro orgs get the counsel-ready artifact with pinned citations', async ({ p
   // Every synthesized sentence carries its pinned citation reference.
   const sentenceCount = await artifact.locator('.export-sentence').count();
   expect(sentenceCount).toBeGreaterThan(0);
-  expect(await artifact.locator('.export-sentence .export-citation').count()).toBeGreaterThanOrEqual(
-    sentenceCount,
-  );
+  expect(
+    await artifact.locator('.export-sentence .export-citation').count(),
+  ).toBeGreaterThanOrEqual(sentenceCount);
 
   // Counsel disclaimer and coverage disclosure are non-negotiable.
   await expect(artifact.locator('.export-footer')).toContainText(/not legal advice/i);
