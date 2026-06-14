@@ -70,7 +70,9 @@ export const document = pgTable(
   {
     /** Internal id, e.g. "US-12790314-B2". */
     id: text('id').primaryKey(),
-    source: text('source', { enum: ['USPTO', 'EPO'] }).notNull(),
+    // TS-level enum only (plain text column in DDL — no migration on widen).
+    // 'CourtListener' added in M4 for litigation dockets in the document model.
+    source: text('source', { enum: ['USPTO', 'EPO', 'CourtListener'] }).notNull(),
     docNumber: text('doc_number').notNull(),
     kindCode: text('kind_code').notNull(),
     applicationNumber: text('application_number').notNull(),

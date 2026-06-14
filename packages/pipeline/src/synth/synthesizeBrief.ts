@@ -158,11 +158,12 @@ export async function synthesizeBrief(input: SynthesizeBriefInput): Promise<Synt
   ].sort((a, b) => a.docId.localeCompare(b.docId) || (a.claimNumber ?? 0) - (b.claimNumber ?? 0));
 
   let budget = input.budget;
-  const drafts: BriefItemDraft[] = facts.map((fact) => {
-    const draft = input.synthesizer.draftSentences(fact);
+  const drafts: BriefItemDraft[] = [];
+  for (const fact of facts) {
+    const draft = await input.synthesizer.draftSentences(fact);
     budget = spendTokens(budget, draft.tokensUsed, 'synthesis');
-    return { fact, sentences: draft.sentences };
-  });
+    drafts.push({ fact, sentences: draft.sentences });
+  }
 
   const coverage: CoverageDisclosure = {
     watched: input.watchlist.jurisdictionsWatched,

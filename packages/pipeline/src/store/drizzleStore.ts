@@ -284,8 +284,10 @@ type DocumentRow = typeof document.$inferSelect;
 type ClaimVersionDbRow = typeof claimVersion.$inferSelect;
 
 function toStoredDocument(row: DocumentRow): StoredDocument {
-  if (row.source !== 'USPTO') {
-    throw new Error(`document ${row.id} has source ${row.source}; the slice store is USPTO-only`);
+  if (row.source !== 'USPTO' && row.source !== 'CourtListener') {
+    throw new Error(
+      `document ${row.id} has source ${row.source}; the slice store handles USPTO and CourtListener only`,
+    );
   }
   return {
     docId: row.id,

@@ -1,9 +1,16 @@
 /** Row types and the storage port shared by the in-memory and Drizzle stores. */
 import type { ClaimStatus, DiffHunk, StructuralChange } from '@claimwatch/core';
 
+/**
+ * Canonical publication sources the pipeline ingests. 'USPTO' rows carry
+ * claims; 'CourtListener' rows are litigation dockets mapped into the same
+ * document model (M4) — no claims, kind code 'DOCKET'.
+ */
+export type DocumentSource = 'USPTO' | 'CourtListener';
+
 export interface StoredDocument {
   readonly docId: string;
-  readonly source: 'USPTO';
+  readonly source: DocumentSource;
   readonly docNumber: string;
   readonly kindCode: string;
   readonly applicationNumber: string;

@@ -73,5 +73,9 @@ typecheck: _bootstrapped
 build: _bootstrapped
     pnpm build
 
+# Run the nightly pipeline runner. No args = deterministic fixture run + run ledger. Pass --live for a real eCFR-free source probe (CourtListener keyless; USPTO needs USPTO_ODP_API_KEY). Writes ledger + brief to out/nightly/.
+nightly *ARGS: _bootstrapped
+    pnpm nightly {{ARGS}}
+
 # full CI gate: lint + typecheck + test + build (what .github/workflows/ci.yml runs)
 ci: lint typecheck test build

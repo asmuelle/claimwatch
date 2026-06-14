@@ -14,13 +14,15 @@
     "test": "vitest run",
     "e2e": "pnpm --filter @claimwatch/web build && playwright test",
     "build": "pnpm -r build",
-    "test:db": "vitest run db.test.ts"
+    "test:db": "vitest run db.test.ts",
+    "nightly": "tsx packages/pipeline/src/nightly/cli.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
     "@types/node": "^22.15.0",
     "eslint": "^9.28.0",
     "prettier": "^3.5.3",
+    "tsx": "^4.19.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.33.0",
     "vitest": "^3.2.0",

@@ -76,7 +76,7 @@ export class MockBriefSynthesizer implements BriefSynthesizer {
 /** Test double: wraps a synthesizer and corrupts output for seeded-fault tests. */
 export class FaultInjectingSynthesizer implements BriefSynthesizer {
   constructor(
-    private readonly inner: BriefSynthesizer,
+    private readonly inner: MockBriefSynthesizer,
     private readonly fault: (
       fact: BriefItemFact,
       sentences: readonly SynthesizedSentence[],

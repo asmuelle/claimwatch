@@ -92,7 +92,7 @@ export async function screenDocuments(
       continue;
     }
 
-    const verdict = classifier.classify(doc, watchlist.claimSpaceDescription);
+    const verdict = await classifier.classify(doc, watchlist.claimSpaceDescription);
     budget = spendTokens(budget, verdict.tokensUsed, 'screening');
     const decision = verdict.verdict === 'out-of-scope' ? 'downrank' : 'surface';
     const row = await store.appendScreeningResult({
