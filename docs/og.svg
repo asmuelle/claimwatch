@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="ClaimWatch — Watch the claims, not just the keywords">
+  <defs>
+    <pattern id="grid" width="34" height="34" patternUnits="userSpaceOnUse">
+      <path d="M34 0H0V34" fill="none" stroke="#0F2A4A" stroke-opacity="0.06" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F6F3EC"/>
+      <stop offset="100%" stop-color="#EBE5D8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- paper background + blueprint grid -->
+  <rect width="1200" height="630" fill="url(#paper)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect x="28" y="28" width="1144" height="574" fill="none" stroke="#0F2A4A" stroke-opacity="0.28" stroke-width="2"/>
+  <rect x="40" y="40" width="1120" height="550" fill="none" stroke="#0F2A4A" stroke-opacity="0.12" stroke-width="1"/>
+
+  <!-- corner figure label -->
+  <text x="60" y="78" font-family="'IBM Plex Mono', monospace" font-size="17" letter-spacing="3" fill="#6E7E96">FIG. 1 — CLAIM-EVOLUTION TIMELINE</text>
+
+  <!-- brand mark + name -->
+  <g transform="translate(60, 118)">
+    <rect x="0" y="0" width="46" height="46" rx="4" fill="none" stroke="#0F2A4A" stroke-width="2.2"/>
+    <line x1="9" y1="14" x2="37" y2="14" stroke="#0F2A4A" stroke-width="2.2"/>
+    <line x1="9" y1="23" x2="37" y2="23" stroke="#C8442B" stroke-width="2.2"/>
+    <line x1="9" y1="32" x2="29" y2="32" stroke="#0F2A4A" stroke-width="2.2"/>
+    <text x="62" y="36" font-family="'Spectral', Georgia, serif" font-size="40" font-weight="600" fill="#0F2A4A">ClaimWatch</text>
+  </g>
+
+  <!-- headline -->
+  <text x="60" y="270" font-family="'Spectral', Georgia, serif" font-size="74" font-weight="600" fill="#0F2A4A">Watch the <tspan fill="#C8442B" font-style="italic">claims</tspan>,</text>
+  <text x="60" y="350" font-family="'Spectral', Georgia, serif" font-size="74" font-weight="600" fill="#0F2A4A">not just the keywords.</text>
+
+  <!-- subhead -->
+  <text x="60" y="412" font-family="'IBM Plex Sans', sans-serif" font-size="27" fill="#41587A">A weekly patent &amp; IP radar over USPTO · EPO · WIPO. Every</text>
+  <text x="60" y="448" font-family="'IBM Plex Sans', sans-serif" font-size="27" fill="#41587A">assertion checkable against the canonical document.</text>
+
+  <!-- redline diff card -->
+  <g transform="translate(60, 488)">
+    <rect x="0" y="0" width="1080" height="92" rx="10" fill="#FBFAF6" stroke="#0F2A4A" stroke-opacity="0.3" stroke-width="1.5"/>
+    <!-- date rail dots -->
+    <g transform="translate(28, 24)">
+      <line x1="6" y1="6" x2="320" y2="6" stroke="#0F2A4A" stroke-opacity="0.3" stroke-width="2"/>
+      <circle cx="6" cy="6" r="6" fill="#FBFAF6" stroke="#0F2A4A" stroke-width="2.5"/>
+      <circle cx="110" cy="6" r="6" fill="#FBFAF6" stroke="#0F2A4A" stroke-width="2.5"/>
+      <circle cx="214" cy="6" r="6" fill="#FBFAF6" stroke="#0F2A4A" stroke-width="2.5"/>
+      <circle cx="320" cy="6" r="6.5" fill="#C8442B" stroke="#C8442B" stroke-width="2.5"/>
+      <text x="0" y="38" font-family="'IBM Plex Mono', monospace" font-size="13" letter-spacing="1" fill="#6E7E96">TUE / THU PUBLICATION CADENCE</text>
+    </g>
+    <!-- diff text -->
+    <g transform="translate(388, 30)">
+      <text font-family="'IBM Plex Mono', monospace" font-size="18" fill="#41587A">Claim 1 · A system comprising <tspan fill="#C8442B" text-decoration="line-through">a neural network</tspan></text>
+      <text y="34" font-family="'IBM Plex Mono', monospace" font-size="18" fill="#0F2A4A">Claim 1 · A system comprising <tspan fill="#0F2A4A" font-weight="600">a transformer-based model</tspan></text>
+    </g>
+    <!-- verify tag -->
+    <g transform="translate(940, 38)">
+      <path d="M0 8l8 8 16-18" fill="none" stroke="#C8442B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="34" y="14" font-family="'IBM Plex Mono', monospace" font-size="16" font-weight="600" fill="#C8442B">VERIFY</text>
+    </g>
+  </g>
+</svg>

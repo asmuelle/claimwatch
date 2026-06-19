@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ClaimWatch — A patent radar that reads the claims, not just the keywords</title>
+<meta name="description" content="ClaimWatch is a weekly patent and IP radar over USPTO, EPO, and WIPO feeds. It maintains living dossiers and claim-evolution timelines for your competitors and claim space — and every assertion links back to the document, claim number, and publication date." />
+<meta name="theme-color" content="#0F2A4A" />
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23F4F1EA'/%3E%3Crect x='6.5' y='6.5' width='19' height='19' rx='2' fill='none' stroke='%230F2A4A' stroke-width='1.3'/%3E%3Cline x1='10' y1='12' x2='22' y2='12' stroke='%230F2A4A' stroke-width='1.3'/%3E%3Cline x1='10' y1='16' x2='22' y2='16' stroke='%23C8442B' stroke-width='1.3'/%3E%3Cline x1='10' y1='20' x2='18' y2='20' stroke='%230F2A4A' stroke-width='1.3'/%3E%3C/svg%3E" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="ClaimWatch — A patent radar that reads the claims" />
+<meta property="og:description" content="A weekly agent over USPTO/EPO/WIPO feeds that maintains living dossiers and claim-evolution timelines. Every assertion is checkable against the canonical document." />
+<meta property="og:site_name" content="ClaimWatch" />
+<meta property="og:image" content="og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="og.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    /* Patent blueprint palette — paper + technical ink */
+    --paper:        #F4F1EA;
+    --paper-2:      #EDE8DD;
+    --paper-deep:   #E7E1D3;
+    --card:         #FBFAF6;
+
+    --ink:          #0F2A4A;   /* deep technical blue */
+    --ink-2:        #173A61;
+    --ink-soft:     #41587A;
+    --ink-faint:    #6E7E96;
+
+    --hairline:        rgba(15, 42, 74, 0.16);
+    --hairline-strong: rgba(15, 42, 74, 0.30);
+    --hairline-blue:   rgba(15, 42, 74, 0.10);
+
+    --vermilion:    #C8442B;   /* redline / delta accent */
+    --vermilion-soft: rgba(200, 68, 43, 0.12);
+    --vermilion-line: rgba(200, 68, 43, 0.40);
+
+    /* Type */
+    --serif: "Spectral", Georgia, "Times New Roman", serif;
+    --sans:  "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono:  "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+    --text-eyebrow: 0.72rem;
+    --text-body:    clamp(1rem, 0.96rem + 0.25vw, 1.08rem);
+    --text-lead:    clamp(1.12rem, 1.0rem + 0.6vw, 1.4rem);
+    --text-h2:      clamp(1.9rem, 1.3rem + 2.6vw, 3rem);
+    --text-h3:      clamp(1.3rem, 1.12rem + 0.85vw, 1.55rem);
+    --text-hero:    clamp(2.6rem, 1.2rem + 6.2vw, 5.6rem);
+
+    --space-section: clamp(4.5rem, 3rem + 6vw, 9rem);
+    --maxw: 1140px;
+
+    --radius: 8px;
+    --radius-lg: 14px;
+
+    --dur: 600ms;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: var(--text-body);
+    line-height: 1.65;
+    color: var(--ink);
+    background-color: var(--paper);
+    /* faint blueprint graph paper */
+    background-image:
+      linear-gradient(rgba(15,42,74,0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15,42,74,0.045) 1px, transparent 1px),
+      radial-gradient(120% 70% at 85% -5%, rgba(200,68,43,0.05), transparent 55%);
+    background-size: 26px 26px, 26px 26px, 100% 100%;
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3 { font-family: var(--serif); font-weight: 600; line-height: 1.1; margin: 0; letter-spacing: -0.012em; }
+  p { margin: 0; }
+  a { color: inherit; text-decoration: none; }
+
+  .wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: clamp(1.2rem, 5vw, 2.5rem); }
+
+  .mono { font-family: var(--mono); }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: var(--text-eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--vermilion);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7em;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 1.6em; height: 1px;
+    background: var(--vermilion-line);
+  }
+
+  .lead { font-size: var(--text-lead); color: var(--ink-soft); line-height: 1.55; }
+
+  /* numbered patent-figure callout ⟨12⟩ */
+  .callout {
+    font-family: var(--mono); font-size: 0.74rem; font-weight: 600;
+    color: var(--ink); border: 1px solid var(--hairline-strong);
+    border-radius: 999px; padding: 0.12em 0.6em; letter-spacing: 0.04em;
+    background: var(--paper); white-space: nowrap;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.6em;
+    font-family: var(--sans); font-weight: 600; font-size: 0.96rem;
+    padding: 0.8em 1.5em;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform var(--dur) var(--ease), background-color 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+    will-change: transform;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+    box-shadow: 0 6px 20px rgba(15,42,74,0.22);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(15,42,74,0.30); background: var(--ink-2); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--hairline-strong);
+  }
+  .btn-ghost:hover { background: rgba(15,42,74,0.05); border-color: var(--vermilion); color: var(--vermilion); transform: translateY(-2px); }
+  .btn-ghost:active { transform: translateY(0); }
+
+  a:focus-visible, button:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--vermilion);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* waitlist badge / brief chip */
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.75em;
+    padding: 0.65em 1.2em;
+    border-radius: var(--radius);
+    border: 1px solid var(--hairline-strong);
+    background: var(--card);
+    color: var(--ink);
+    transition: transform var(--dur) var(--ease), border-color 200ms ease;
+  }
+  .badge:hover { transform: translateY(-2px); border-color: var(--ink); }
+  .badge small { display: block; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+  .badge strong { display: block; font-family: var(--serif); font-weight: 600; font-size: 1.02rem; }
+
+  /* ---------- Header ---------- */
+  header.site {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(10px);
+    background: rgba(244,241,234,0.84);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding-block: 0.9rem; }
+  .brand { display: inline-flex; align-items: center; gap: 0.65em; font-family: var(--serif); font-size: 1.35rem; font-weight: 600; letter-spacing: -0.01em; }
+  .brand .mark { width: 30px; height: 30px; flex: none; }
+  .nav-links { display: flex; gap: 1.7rem; align-items: center; }
+  .nav-links a { font-size: 0.9rem; color: var(--ink-soft); transition: color 180ms ease; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta { font-weight: 600; color: var(--vermilion) !important; }
+  @media (max-width: 760px) { .nav-links a:not(.nav-cta) { display: none; } }
+
+  /* ---------- Hero ---------- */
+  .hero { position: relative; padding-top: clamp(2.5rem, 2rem + 4vw, 5rem); padding-bottom: var(--space-section); overflow: hidden; }
+  .hero-grid {
+    position: relative; z-index: 2;
+    display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(2rem, 4vw, 3.5rem); align-items: center;
+  }
+  @media (max-width: 940px) { .hero-grid { grid-template-columns: 1fr; } }
+
+  h1 { font-size: var(--text-hero); font-weight: 600; margin-bottom: 1.1rem; }
+  h1 em { font-style: italic; color: var(--vermilion); }
+  .hero p.lead { max-width: 42ch; margin-bottom: 2rem; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-bottom: 2.2rem; }
+
+  /* verifiable-citation proof chip */
+  .proof {
+    display: inline-flex; align-items: flex-start; gap: 0.85em;
+    padding: 0.8em 1.1em;
+    border-radius: var(--radius);
+    background: var(--vermilion-soft);
+    border: 1px solid var(--vermilion-line);
+    border-left-width: 3px;
+    max-width: 46ch;
+  }
+  .proof svg { flex: none; margin-top: 0.15em; }
+  .proof span { font-size: 0.9rem; color: var(--ink); line-height: 1.45; }
+  .proof b { color: var(--vermilion); font-weight: 600; }
+
+  /* ---------- Signature hero visual: claim-evolution redline ---------- */
+  .hero-visual { position: relative; }
+  .blueprint {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.1rem, 2.2vw, 1.6rem);
+    box-shadow: 0 30px 60px -30px rgba(15,42,74,0.35);
+  }
+  .blueprint::before {
+    content: "FIG. 1 — CLAIM-EVOLUTION TIMELINE";
+    position: absolute; top: -0.7rem; left: 1.2rem;
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em;
+    color: var(--ink-faint); background: var(--card); padding: 0 0.5em;
+  }
+  .bp-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-bottom: 0.8rem; margin-bottom: 0.9rem; border-bottom: 1px solid var(--hairline); }
+  .bp-head .doc { font-family: var(--mono); font-size: 0.8rem; font-weight: 600; color: var(--ink); }
+  .bp-head .fam { font-family: var(--mono); font-size: 0.68rem; color: var(--ink-faint); }
+
+  /* date-tick cadence rail */
+  .bp-rail { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-bottom: 1.1rem; position: relative; }
+  .bp-rail::after { content: ""; position: absolute; left: 6px; right: 6px; top: 5px; height: 1px; background: var(--hairline-strong); z-index: 0; }
+  .tick { position: relative; z-index: 1; text-align: center; }
+  .tick .dot { width: 11px; height: 11px; border-radius: 50%; background: var(--paper); border: 2px solid var(--ink); margin: 0 auto 0.4em; }
+  .tick.on .dot { background: var(--vermilion); border-color: var(--vermilion); }
+  .tick .d { font-family: var(--mono); font-size: 0.62rem; color: var(--ink-faint); display: block; line-height: 1.35; }
+  .tick .lab { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
+  .tick.on .lab { color: var(--vermilion); }
+
+  /* the redline diff itself */
+  .diff { font-family: var(--mono); font-size: 0.8rem; line-height: 1.65; }
+  .diff .claimno { color: var(--ink-faint); font-weight: 600; }
+  .diff .row { padding: 0.35em 0.55em; border-radius: 4px; margin-bottom: 0.3em; }
+  .diff .del { background: rgba(200,68,43,0.08); color: var(--ink-soft); }
+  .diff .del s { color: var(--vermilion); text-decoration-thickness: 1.5px; }
+  .diff .add { background: rgba(15,42,74,0.05); color: var(--ink); }
+  .diff .add ins { color: var(--ink); text-decoration: none; background: rgba(15,42,74,0.10); padding: 0 0.15em; border-radius: 3px; font-weight: 600; }
+  .diff .src { display: flex; align-items: center; gap: 0.5em; margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px dashed var(--hairline); font-size: 0.68rem; color: var(--ink-faint); }
+  .diff .src .verify { color: var(--vermilion); font-weight: 600; }
+
+  .bp-note {
+    margin-top: 0.9rem; padding: 0.7em 0.8em;
+    background: var(--paper-2); border: 1px solid var(--hairline);
+    border-radius: var(--radius); font-size: 0.78rem; color: var(--ink-soft); line-height: 1.5;
+  }
+  .bp-note b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- Generic section ---------- */
+  section { position: relative; }
+  .section-pad { padding-block: var(--space-section); }
+  .section-head { max-width: 58ch; margin-bottom: clamp(2.5rem, 4vw, 3.8rem); }
+  .section-head h2 { font-size: var(--text-h2); margin-block: 0.6rem 1rem; }
+  .section-head p { color: var(--ink-soft); }
+
+  .rule { height: 1px; background: var(--hairline); }
+
+  /* ---------- Promise band ---------- */
+  .promise {
+    background:
+      linear-gradient(180deg, var(--paper-deep), var(--paper-2));
+    border-block: 1px solid var(--hairline);
+  }
+  .promise-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  @media (max-width: 880px) { .promise-grid { grid-template-columns: 1fr; } }
+  .promise blockquote {
+    margin: 0; font-family: var(--serif);
+    font-size: clamp(1.6rem, 1.1rem + 2.4vw, 2.5rem); line-height: 1.22; font-weight: 500;
+  }
+  .promise blockquote .hl { color: var(--vermilion); font-style: italic; }
+  .promise-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.3rem; }
+  .promise-list li { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: start; }
+  .promise-list .ico {
+    width: 42px; height: 42px; flex: none; border-radius: var(--radius);
+    display: grid; place-items: center;
+    background: var(--card); border: 1px solid var(--hairline-strong);
+  }
+  .promise-list h3 { font-family: var(--sans); font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .promise-list p { color: var(--ink-soft); font-size: 0.94rem; }
+
+  /* ---------- Features (bento) ---------- */
+  .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1.2rem; }
+  .card {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.5rem, 2.5vw, 2.1rem);
+    transition: transform var(--dur) var(--ease), border-color 250ms ease, box-shadow 250ms ease;
+    overflow: hidden;
+  }
+  .card:hover { transform: translateY(-4px); border-color: var(--hairline-strong); box-shadow: 0 24px 45px -25px rgba(15,42,74,0.32); }
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; }
+  .card .kicker { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--vermilion); font-weight: 600; }
+  .card h3 { font-size: var(--text-h3); margin-block: 0.7rem 0.6rem; }
+  .card p { color: var(--ink-soft); font-size: 0.95rem; }
+  .card .visual { margin-top: 1.4rem; }
+
+  .col-3 { grid-column: span 3; }
+  .col-2 { grid-column: span 2; }
+  .col-4 { grid-column: span 4; }
+  .col-6 { grid-column: span 6; }
+  @media (max-width: 900px) { .col-3, .col-2, .col-4 { grid-column: span 3; } .bento { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 640px) { .bento { grid-template-columns: 1fr; } .col-3, .col-2, .col-4, .col-6 { grid-column: 1 / -1; } }
+
+  .accent-card { background: linear-gradient(150deg, var(--vermilion-soft), var(--card) 55%); border-color: var(--vermilion-line); }
+
+  /* watchlist chips */
+  .cluster { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.3rem; }
+  .chip { font-family: var(--mono); font-size: 0.74rem; padding: 0.35em 0.7em; border-radius: 999px; border: 1px solid var(--hairline-strong); color: var(--ink-soft); background: var(--paper); }
+  .chip.on { color: var(--paper); background: var(--ink); border-color: var(--ink); font-weight: 600; }
+  .chip.flag { color: var(--paper); background: var(--vermilion); border-color: var(--vermilion); font-weight: 600; }
+
+  /* mini status ledger */
+  .ledger { margin-top: 1.4rem; display: grid; gap: 0.55rem; font-family: var(--mono); font-size: 0.74rem; }
+  .ledger .lr { display: grid; grid-template-columns: auto 1fr auto; gap: 0.7rem; align-items: center; }
+  .ledger .lr .st { width: 9px; height: 9px; border-radius: 2px; }
+  .ledger .lr .st.new { background: var(--vermilion); }
+  .ledger .lr .st.amd { background: var(--ink); }
+  .ledger .lr .st.lap { background: var(--ink-faint); }
+  .ledger .lr .who { color: var(--ink); }
+  .ledger .lr .tag { color: var(--ink-faint); }
+
+  /* ---------- How it works ---------- */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6rem; }
+  @media (max-width: 820px) { .steps { grid-template-columns: 1fr; } }
+  .step { padding-top: 1.3rem; border-top: 2px solid var(--ink); }
+  .step .num { font-family: var(--mono); font-size: 0.8rem; font-weight: 600; color: var(--vermilion); letter-spacing: 0.1em; }
+  .step h3 { font-family: var(--serif); font-size: 1.3rem; font-weight: 600; margin-block: 0.5rem 0.5rem; }
+  .step p { color: var(--ink-soft); font-size: 0.94rem; }
+
+  /* ---------- Pricing ---------- */
+  .price-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; align-items: stretch; }
+  @media (max-width: 880px) { .price-grid { grid-template-columns: 1fr; } }
+  .plan {
+    border: 1px solid var(--hairline); border-radius: var(--radius-lg);
+    padding: 2rem clamp(1.6rem, 2.5vw, 2.1rem);
+    background: var(--card);
+    display: flex; flex-direction: column;
+  }
+  .plan.feature { border-color: var(--ink); border-width: 1.5px; box-shadow: 0 24px 50px -28px rgba(15,42,74,0.4); position: relative; }
+  .plan.feature::before { content: "Primary engine"; position: absolute; top: -0.7rem; left: 1.6rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--paper); background: var(--ink); padding: 0.2em 0.7em; border-radius: 999px; }
+  .plan .tag { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: var(--vermilion); }
+  .plan h3 { font-family: var(--serif); font-size: 1.5rem; margin-block: 0.6rem 0.3rem; }
+  .plan .amt { font-family: var(--serif); font-size: 2.4rem; font-weight: 600; margin-block: 0.8rem 0.2rem; }
+  .plan .amt span { font-family: var(--mono); font-size: 0.8rem; color: var(--ink-faint); font-weight: 400; }
+  .plan .sub { color: var(--ink-soft); font-size: 0.92rem; min-height: 3em; }
+  .plan ul { list-style: none; margin: 1.3rem 0 1.8rem; padding: 0; display: grid; gap: 0.75rem; }
+  .plan li { display: grid; grid-template-columns: auto 1fr; gap: 0.7rem; font-size: 0.92rem; color: var(--ink); }
+  .plan li svg { margin-top: 0.25em; flex: none; }
+  .plan .foot { margin-top: auto; }
+  .price-note { text-align: center; margin-top: 1.8rem; color: var(--ink-faint); font-size: 0.86rem; }
+  .price-extra { margin-top: 1.2rem; padding: 1rem 1.2rem; border: 1px dashed var(--hairline-strong); border-radius: var(--radius); background: var(--paper-2); font-size: 0.9rem; color: var(--ink-soft); display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; }
+  .price-extra b { color: var(--ink); font-family: var(--serif); font-size: 1.05rem; font-weight: 600; }
+
+  /* ---------- FAQ ---------- */
+  .faq { display: grid; gap: 0.9rem; max-width: 840px; }
+  details {
+    border: 1px solid var(--hairline); border-radius: var(--radius);
+    background: var(--card); padding: 0.4rem 1.4rem;
+    transition: border-color 200ms ease;
+  }
+  details[open] { border-color: var(--hairline-strong); }
+  summary {
+    cursor: pointer; list-style: none; padding-block: 1.1rem;
+    font-family: var(--serif); font-size: 1.12rem; font-weight: 600;
+    display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary .plus { flex: none; width: 22px; height: 22px; position: relative; transition: transform 300ms var(--ease); }
+  summary .plus::before, summary .plus::after { content: ""; position: absolute; background: var(--vermilion); border-radius: 2px; }
+  summary .plus::before { top: 10px; left: 2px; right: 2px; height: 2px; }
+  summary .plus::after { left: 10px; top: 2px; bottom: 2px; width: 2px; }
+  details[open] summary .plus { transform: rotate(135deg); }
+  details p { color: var(--ink-soft); padding-bottom: 1.2rem; font-size: 0.97rem; }
+  details p + p { padding-top: 0; margin-top: -0.4rem; }
+
+  /* ---------- Final CTA ---------- */
+  .final { }
+  .final-card {
+    position: relative; overflow: hidden;
+    border: 1.5px solid var(--ink); border-radius: var(--radius-lg);
+    padding: clamp(2.5rem, 5vw, 4.2rem) clamp(1.5rem, 4vw, 3rem);
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+  }
+  .final-card::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.5;
+    background-image:
+      linear-gradient(rgba(244,241,234,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(244,241,234,0.06) 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+  .final-card > * { position: relative; z-index: 1; }
+  .final-card .eyebrow { color: #E89685; }
+  .final-card .eyebrow::before { background: rgba(232,150,133,0.5); }
+  .final-card h2 { font-size: var(--text-h2); margin-bottom: 1rem; color: var(--paper); }
+  .final-card p { color: rgba(244,241,234,0.78); max-width: 48ch; margin: 0 auto 2rem; }
+  .final-card .btn-primary { background: var(--paper); color: var(--ink); }
+  .final-card .btn-primary:hover { background: #fff; }
+  .final-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  /* ---------- Footer ---------- */
+  footer.site { border-top: 1px solid var(--hairline); padding-block: 3rem 2.5rem; color: var(--ink-faint); }
+  .foot-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem; margin-bottom: 2rem; }
+  .foot-brand { display: flex; align-items: center; gap: 0.6em; font-family: var(--serif); font-size: 1.2rem; color: var(--ink); font-weight: 600; }
+  .foot-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .foot-links a { font-size: 0.9rem; color: var(--ink-soft); transition: color 180ms ease; }
+  .foot-links a:hover { color: var(--ink); }
+  .disclaimer { font-size: 0.82rem; line-height: 1.65; max-width: 78ch; border-top: 1px solid var(--hairline); padding-top: 1.5rem; }
+
+  /* ---------- Scroll reveal ---------- */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity 700ms var(--ease), transform 700ms var(--ease); }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+    .btn, .card, .badge, .proof, .plan { transition: none; }
+  }
+
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+</style>
+<script data-goatcounter="https://asmuelle.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+
+<a href="#main" class="visually-hidden">Skip to content</a>
+
+<!-- ===== Header ===== -->
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="ClaimWatch home">
+      <svg class="mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect x="6.5" y="6.5" width="19" height="19" rx="2" fill="none" stroke="#0F2A4A" stroke-width="1.4"/>
+        <line x1="10" y1="12" x2="22" y2="12" stroke="#0F2A4A" stroke-width="1.4"/>
+        <line x1="10" y1="16" x2="22" y2="16" stroke="#C8442B" stroke-width="1.4"/>
+        <line x1="10" y1="20" x2="18" y2="20" stroke="#0F2A4A" stroke-width="1.4"/>
+      </svg>
+      ClaimWatch
+    </a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#trust">Why verifiable</a>
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#get" class="nav-cta">Get the brief</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <span id="top"></span>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="wrap hero-grid">
+      <div class="hero-copy reveal">
+        <p class="eyebrow">Patent &amp; IP radar · USPTO · EPO · WIPO</p>
+        <h1 id="hero-heading">Watch the <em>claims</em>, not just the keywords.</h1>
+        <p class="lead">ClaimWatch is a weekly agent over the official patent feeds. It maintains a living dossier for every competitor and claim space you watch — and tells you what changed, with a link back to the exact claim and filing date.</p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#get">Join the waitlist</a>
+          <a class="btn btn-ghost" href="#trust">Why verifiable citations</a>
+        </div>
+
+        <div class="proof" role="note">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="4" y="3" width="13" height="18" rx="2" stroke="#C8442B" stroke-width="1.6"/>
+            <line x1="7.5" y1="8" x2="13.5" y2="8" stroke="#C8442B" stroke-width="1.4"/>
+            <line x1="7.5" y1="11.5" x2="13.5" y2="11.5" stroke="#C8442B" stroke-width="1.4"/>
+            <path d="M14 16.5l2.2 2.2 4-4.4" stroke="#C8442B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span><b>Every assertion is checkable.</b> Each line in your brief resolves to a document ID, claim number, and publication date — the one research domain where every citation is mechanically verifiable.</span>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal">
+        <!-- Signature: claim-evolution redline diff on the Tue/Thu cadence -->
+        <div class="blueprint" role="img" aria-label="A claim-evolution timeline figure. A date rail marks four official publication dates on the Tuesday and Thursday cadence, with the latest flagged. Below it, claim 1 is shown as a redline diff: the phrase 'a neural network' is struck through and replaced with 'a transformer-based model trained on labeled telemetry', narrowing the claim after a rejection. The source line cites the document, claim, and date.">
+          <div class="bp-head">
+            <span class="doc">US 2026/0142881 A1</span>
+            <span class="fam">Family · Acme Robotics · CPC G06N&nbsp;3/08</span>
+          </div>
+
+          <div class="bp-rail" aria-hidden="true">
+            <div class="tick"><span class="dot"></span><span class="d">Mar 04</span><span class="lab">Pub</span></div>
+            <div class="tick"><span class="dot"></span><span class="d">Apr 22</span><span class="lab">Office&nbsp;action</span></div>
+            <div class="tick"><span class="dot"></span><span class="d">May 13</span><span class="lab">Amend</span></div>
+            <div class="tick on"><span class="dot"></span><span class="d">Jun 17</span><span class="lab">Republish</span></div>
+          </div>
+
+          <div class="diff">
+            <div class="row del"><span class="claimno">Claim 1 · was&nbsp;</span>A system comprising <s>a neural network</s> configured to classify sensor input…</div>
+            <div class="row add"><span class="claimno">Claim 1 · now</span> A system comprising <ins>a transformer-based model trained on labeled telemetry</ins> configured to classify sensor input…</div>
+            <div class="src">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12l4 4L19 6" stroke="#C8442B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="verify">Verify ⟶</span>&nbsp;US&nbsp;2026/0142881&nbsp;A1, Claim&nbsp;1 · pub.&nbsp;2026‑06‑17
+            </div>
+          </div>
+
+          <div class="bp-note">
+            <b>What this means:</b> Acme narrowed claim 1 to a transformer after rejection — the broader "neural network" scope is now open design space in your area.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Trust promise band ===== -->
+  <section id="trust" class="promise section-pad" aria-labelledby="trust-heading">
+    <div class="wrap promise-grid">
+      <div class="reveal">
+        <p class="eyebrow">The trust standard</p>
+        <h2 id="trust-heading" class="visually-hidden">Why mechanically-verifiable citations</h2>
+        <blockquote>If we can't point to the <span class="hl">claim, the document, and the date</span> — we don't put it in your brief.</blockquote>
+        <p class="lead" style="margin-top:1.5rem; max-width:44ch;">Patent monitoring is the rare research domain where the ground truth is a free, canonical, permanently archived government record. ClaimWatch is built around that fact: extraction is grounded and claim diffs are computed deterministically — never invented by a model.</p>
+      </div>
+      <ul class="promise-list reveal">
+        <li>
+          <span class="ico">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="3" width="13" height="18" rx="2" stroke="#0F2A4A" stroke-width="1.5"/><path d="M14 15l2 2 4-4" stroke="#C8442B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <div><h3>Cite-or-omit grounding</h3><p>Every sentence in a dossier or brief resolves to a stored document ID and claim number, and is validated after generation. No source, no claim.</p></div>
+        </li>
+        <li>
+          <span class="ico">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 18V6m0 0 4 3-4 3m14 0V6m0 12-4-3 4-3" stroke="#0F2A4A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <div><h3>Deterministic claim diffs</h3><p>Amendments are computed as exact text diffs against the canonical file wrapper — not paraphrased. The redline is the record, not a guess.</p></div>
+        </li>
+        <li>
+          <span class="ico">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8.5" stroke="#0F2A4A" stroke-width="1.5"/><path d="M12 7v5l3 2" stroke="#C8442B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <div><h3>Accumulated, longitudinal state</h3><p>The dossier grows every Tuesday and Thursday. You don't get a one-off snapshot — you get the whole prosecution arc, kept current.</p></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Features ===== -->
+  <section id="features" class="section-pad" aria-labelledby="features-heading">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">What ClaimWatch does</p>
+        <h2 id="features-heading">A $400/hr associate's monitoring work, turned into a reviewable weekly brief.</h2>
+        <p>Define what you care about as CPC classes, named competitors and inventors, and a plain-language description of your claim space. The agent does the reading.</p>
+      </div>
+
+      <div class="bento">
+        <article class="card col-3 reveal">
+          <div class="card-head"><span class="kicker">Watchlists</span><span class="callout">⟨01⟩</span></div>
+          <h3>Define your claim space in plain language</h3>
+          <p>Combine CPC classes, named competitors, and inventors with a natural-language description of the territory you're defending. ClaimWatch screens every new publication against it.</p>
+          <div class="visual cluster">
+            <span class="chip on">G06N&nbsp;3/08</span><span class="chip on">Acme Robotics</span><span class="chip">"edge inference"</span><span class="chip">B25J&nbsp;9/16</span>
+          </div>
+        </article>
+
+        <article class="card col-3 reveal">
+          <div class="card-head"><span class="kicker">Delta engine</span><span class="callout">⟨02⟩</span></div>
+          <h3>Filings, amendments, assignments &amp; lapses</h3>
+          <p>The radar flags new filings in your space, claim amendments during prosecution, ownership changes, and fee lapses or expirations — each tagged, dated, and linked.</p>
+          <div class="visual ledger" aria-hidden="true">
+            <div class="lr"><span class="st new"></span><span class="who">New filing · "swarm pathing"</span><span class="tag">Jun 17</span></div>
+            <div class="lr"><span class="st amd"></span><span class="who">Claim 1 amended · narrowed</span><span class="tag">Jun 17</span></div>
+            <div class="lr"><span class="st lap"></span><span class="who">Assignment · Acme → NewCo</span><span class="tag">Jun 13</span></div>
+          </div>
+        </article>
+
+        <article class="card col-4 reveal">
+          <div class="card-head"><span class="kicker">Reasoning</span><span class="callout">⟨03⟩</span></div>
+          <h3>What the amendment means for your design space</h3>
+          <p>The weekly brief reasons over prosecution history, not just headlines: <em>"Competitor X's continuation narrowed claim 1 after a rejection — this opens design space in Y."</em> Every step of the reasoning links back to the office action and claim it rests on, so your counsel can review it, not just trust it.</p>
+          <div class="visual cluster">
+            <span class="chip flag">Narrowed after §103</span><span class="chip">Continuation</span><span class="chip on">Opens design space</span>
+          </div>
+        </article>
+
+        <article class="card col-2 accent-card reveal">
+          <div class="card-head"><span class="kicker">Cadence</span><span class="callout">⟨04⟩</span></div>
+          <h3>On the official Tue / Thu cycle</h3>
+          <p>Grants publish Tuesday, pre-grant applications Thursday. ClaimWatch ingests the bulk feeds on the same rhythm — so the brief is never stale and never noisy.</p>
+        </article>
+
+        <article class="card col-6 reveal">
+          <div class="card-head"><span class="kicker">Deliverable</span><span class="callout">⟨05⟩</span></div>
+          <h3>A weekly brief built to be forwarded</h3>
+          <p>The brief is the primary touchpoint — readable enough to forward to a board, structured enough to drop into a client file. The Counsel tier adds a PDF export formatted for outside counsel; the Firm tier white-labels it per client workspace. It's monitoring work made reviewable, not another inbox of keyword-alert spam.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="rule" aria-hidden="true"></div></div>
+
+  <!-- ===== How it works ===== -->
+  <section id="how" class="section-pad" aria-labelledby="how-heading">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">How it works</p>
+        <h2 id="how-heading">Free canonical data in. A reviewable brief out.</h2>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="num">STEP 01</div>
+          <h3>Ingest the official feeds</h3>
+          <p>USPTO full-text and assignment data, EPO OPS, WIPO PATENTSCOPE, and litigation dockets — refreshed on the Tuesday/Thursday publication cycle. Cheap-model screening narrows hundreds of new documents to what touches your watchlist.</p>
+        </div>
+        <div class="step reveal">
+          <div class="num">STEP 02</div>
+          <h3>Update the living dossier</h3>
+          <p>A frontier pass updates each family's claim-evolution timeline, assignment history, and prosecution status. Claim diffs are computed deterministically from the canonical text — never written by the model.</p>
+        </div>
+        <div class="step reveal">
+          <div class="num">STEP 03</div>
+          <h3>Send the weekly brief</h3>
+          <p>You get a synthesized brief over email and on the web: what changed, why it matters for your claim space, and a verifiable link for every assertion. Forward it, file it, or hand it to counsel for review.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Pricing ===== -->
+  <section id="pricing" class="promise section-pad" aria-labelledby="pricing-heading">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Pricing · coming soon</p>
+        <h2 id="pricing-heading">Synthesis under $1K/mo, where the incumbents only offer a quote.</h2>
+        <p>PatSnap, Clarivate, and Questel start in the five figures and sell database access plus keyword alerts. ClaimWatch sells the brief — claim-evolution dossiers and prosecution-history reasoning — at a price a startup can actually approve.</p>
+      </div>
+
+      <div class="price-grid">
+        <div class="plan reveal">
+          <span class="tag">Entry · PLG</span>
+          <h3>Startup</h3>
+          <div class="amt">$149<span> / mo</span></div>
+          <p class="sub">For one team defending a single technology area. Annual billing available.</p>
+          <ul>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="#0F2A4A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>1 technology-area watchlist</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="#0F2A4A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Up to 10 competitors / CPC classes</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="#0F2A4A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Living dossiers + weekly brief</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="#0F2A4A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Annual billing ($1,490/yr — 2 months free)</li>
+          </ul>
+          <div class="foot"><a class="btn btn-ghost" href="#get" style="width:100%; justify-content:center;">Join the waitlist</a></div>
+        </div>
+
+        <div class="plan feature reveal">
+          <span class="tag">Most teams start here</span>
+          <h3>Pro</h3>
+          <div class="amt">$399<span> / mo</span></div>
+          <p class="sub">For serious portfolios — adds litigation visibility and counsel-ready output.</p>
+          <ul>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="#C8442B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>5 watchlists</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="#C8442B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Litigation-docket monitoring</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="#C8442B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Counsel-ready PDF export</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="#C8442B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Everything in Startup</li>
+          </ul>
+          <div class="foot"><a class="btn btn-primary" href="#get" style="width:100%; justify-content:center;">Join the waitlist</a></div>
+        </div>
+
+        <div class="plan reveal">
+          <span class="tag">For IP firms</span>
+          <h3>Firm</h3>
+          <div class="amt">$1,250<span> / mo&nbsp;base</span></div>
+          <p class="sub">Resell a white-label brief to your clients. Plus $99 per client workspace / mo.</p>
+          <ul>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="#0F2A4A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Multi-client workspaces</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="#0F2A4A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>White-label briefs &amp; exports</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="#0F2A4A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>+$99 / client workspace / mo</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="#0F2A4A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Everything in Pro</li>
+          </ul>
+          <div class="foot"><a class="btn btn-ghost" href="#get" style="width:100%; justify-content:center;">Talk to us</a></div>
+        </div>
+      </div>
+
+      <div class="price-extra reveal">
+        <b>Diligence Snapshot</b>
+        <span>A one-off claim-space landscape + competitor prosecution-history report — built for a fundraise or an FTO question. <strong>$1,500–$2,500</strong>, one time.</span>
+      </div>
+      <p class="price-note">Prices shown for reference ahead of launch. Pricing and tier limits may change before general availability.</p>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section id="faq" class="section-pad" aria-labelledby="faq-heading">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Questions</p>
+        <h2 id="faq-heading">The honest answers, up front.</h2>
+      </div>
+      <div class="faq reveal">
+        <details open>
+          <summary>Is ClaimWatch legal advice?<span class="plus" aria-hidden="true"></span></summary>
+          <p>No. ClaimWatch is a monitoring and research tool. It surfaces filings, computes claim diffs, and explains what an amendment <em>could</em> mean for a claim space — but a freedom-to-operate or patentability opinion is a legal judgment that only a qualified attorney can give.</p>
+          <p>That's why the brief is built to be <em>reviewed</em>: every assertion links to the underlying document so your in-house or outside counsel can check it and decide. ClaimWatch makes their monitoring work faster and reviewable; it does not replace their opinion.</p>
+        </details>
+        <details>
+          <summary>How accurate is it — can it miss a filing?<span class="plus" aria-hidden="true"></span></summary>
+          <p>Two parts behave very differently. Extraction and claim diffs are computed deterministically from the canonical record, so a cited amendment, claim number, and date are mechanically verifiable. We treat that as the trust floor of the product.</p>
+          <p>Recall is harder and we won't overclaim it. Matching a natural-language claim space against deliberately broad patent language, divisionals filed under unexpected CPC codes, or jurisdictions we don't yet cover means some filings can be missed. ClaimWatch is a powerful early-warning layer, not a guarantee of completeness — pair it with counsel for anything diligence-critical.</p>
+        </details>
+        <details>
+          <summary>Where does the data come from?<span class="plus" aria-hidden="true"></span></summary>
+          <p>Free, canonical government sources: USPTO full-text, assignment, and file-wrapper data; EPO OPS; WIPO PATENTSCOPE; and litigation dockets via court records. The corpus is structured and openly published, which is exactly why ClaimWatch can offer synthesis at a fraction of the incumbent price.</p>
+        </details>
+        <details>
+          <summary>Why a weekly cadence instead of real-time alerts?<span class="plus" aria-hidden="true"></span></summary>
+          <p>Because the data publishes weekly. Patent grants come out Tuesdays and pre-grant applications Thursdays, and prosecution moves over months and years — not minutes. A weekly brief matches the real rhythm of the corpus and produces a synthesized, forwardable document instead of a stream of low-signal pings.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Final CTA ===== -->
+  <section id="get" class="section-pad final" aria-labelledby="get-heading">
+    <div class="wrap">
+      <div class="final-card reveal">
+        <p class="eyebrow" style="justify-content:center;">ClaimWatch</p>
+        <h2 id="get-heading">Never be the last to know what your competitors filed.</h2>
+        <p>Join the waitlist to get the weekly brief at launch — living dossiers, claim-evolution timelines, and a verifiable link behind every line.</p>
+        <div class="final-actions">
+          <a class="btn btn-primary" href="#">Join the waitlist</a>
+          <a class="btn btn-ghost" href="#" style="color:var(--paper); border-color:rgba(244,241,234,0.4);">Request a Diligence Snapshot</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===== Footer ===== -->
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <svg width="24" height="24" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <rect x="6.5" y="6.5" width="19" height="19" rx="2" fill="none" stroke="#0F2A4A" stroke-width="1.5"/>
+          <line x1="10" y1="12" x2="22" y2="12" stroke="#0F2A4A" stroke-width="1.5"/>
+          <line x1="10" y1="16" x2="22" y2="16" stroke="#C8442B" stroke-width="1.5"/>
+          <line x1="10" y1="20" x2="18" y2="20" stroke="#0F2A4A" stroke-width="1.5"/>
+        </svg>
+        ClaimWatch
+      </div>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="#trust">Why verifiable</a>
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a href="#get">Get the brief</a>
+      </nav>
+    </div>
+    <p class="disclaimer">
+      ClaimWatch is a patent and IP <strong>monitoring and research tool</strong>. It is <strong>not legal advice</strong> and not a substitute for a qualified patent attorney. Its outputs — including freedom-to-operate signals, claim-space matches, and prosecution-history interpretations — are informational, may be incomplete, and can miss filings (for example, divisionals under unexpected CPC codes, deliberately broad claim language, or jurisdictions not yet covered). Always consult licensed counsel before making any freedom-to-operate, validity, infringement, investment, or filing decision. Patent data is sourced from public USPTO, EPO, WIPO, and court records; ClaimWatch is not affiliated with or endorsed by any of these offices.
+      <br /><br />
+      © 2026 ClaimWatch. Pre-launch — features, tiers, and pricing are subject to change.
+    </p>
+  </div>
+</footer>
+
+<script>
+  // Scroll-reveal, gated on reduced-motion. No external deps.
+  (function () {
+    var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var els = document.querySelectorAll('.reveal');
+    if (prefersReduced || !('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function (el) { io.observe(el); });
+  })();
+</script>
+</body>
+</html>
