@@ -65,6 +65,10 @@ lint: _bootstrapped
 format: _bootstrapped
     pnpm format
 
+# audit dependencies for high+ severity advisories; CI gate
+audit: _bootstrapped
+    pnpm audit --audit-level=high
+
 # type-check all packages (tsc --noEmit, strict)
 typecheck: _bootstrapped
     pnpm typecheck
@@ -78,4 +82,4 @@ nightly *ARGS: _bootstrapped
     pnpm nightly {{ARGS}}
 
 # full CI gate: lint + typecheck + test + build (what .github/workflows/ci.yml runs)
-ci: lint typecheck test build
+ci: lint typecheck test build audit
