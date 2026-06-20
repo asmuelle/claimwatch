@@ -1,5 +1,7 @@
 # ClaimWatch
 
+[![CI](https://github.com/asmuelle/claimwatch/actions/workflows/ci.yml/badge.svg)](https://github.com/asmuelle/claimwatch/actions/workflows/ci.yml)
+
 > Patent and IP radar for IP-heavy startups: a weekly agent over USPTO/EPO/WIPO bulk feeds maintains living dossiers per technology area and competitor — alerting on new filings in your claim space, claim amendments, assignments, and lapses, with every assertion checkable against the canonical document.
 
 **Category:** LLM wiki / auto-research (living documents + delta alerts, à la Karpathy) 
