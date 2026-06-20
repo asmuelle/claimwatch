@@ -1,0 +1,44 @@
+# ClaimWatch
+
+> A weekly patent and IP radar over USPTO, EPO, and WIPO feeds that maintains living dossiers and claim-evolution timelines — where every assertion links back to the exact document, claim number, and publication date.
+
+## What it is
+
+ClaimWatch is a weekly agent over the official patent feeds. It maintains a living dossier for every competitor and claim space you watch, and tells you what changed — with a link back to the exact claim and filing date. Extraction is grounded and claim diffs are computed deterministically from the canonical record, never invented by a model. It is a monitoring and research tool, not legal advice and not a substitute for a qualified patent attorney.
+
+## Who it's for
+
+- Startups and teams defending a single technology area or a serious patent portfolio
+- In-house and outside counsel who need monitoring work made faster and reviewable
+- IP firms that want to resell a white-label brief to their clients
+
+## Key features
+
+- Watchlists: define your claim space in plain language by combining CPC classes, named competitors, and inventors with a natural-language description of the territory you're defending.
+- Delta engine: flags new filings, claim amendments during prosecution, ownership changes, and fee lapses or expirations — each tagged, dated, and linked.
+- Reasoning: the weekly brief reasons over prosecution history (e.g. a continuation that narrowed claim 1 after a rejection, opening design space), with every step linked back to the office action and claim it rests on.
+- Cite-or-omit grounding: every sentence resolves to a stored document ID and claim number, validated after generation. No source, no claim.
+- Deterministic claim diffs: amendments are computed as exact text diffs against the canonical file wrapper, not paraphrased.
+- Accumulated, longitudinal state: the dossier grows every Tuesday and Thursday, capturing the whole prosecution arc.
+- Official Tue/Thu cadence: grants publish Tuesday, pre-grant applications Thursday; ClaimWatch ingests the bulk feeds on the same rhythm.
+- Weekly brief: readable enough to forward to a board, structured enough to drop into a client file, delivered over email and on the web.
+
+## Pricing
+
+Pricing is shown for reference ahead of launch and may change before general availability.
+
+- Startup — $149 / mo (annual billing $1,490/yr, 2 months free): 1 technology-area watchlist, up to 10 competitors / CPC classes, living dossiers + weekly brief.
+- Pro — $399 / mo: 5 watchlists, litigation-docket monitoring, counsel-ready PDF export, everything in Startup.
+- Firm — $1,250 / mo base, plus $99 per client workspace / mo: multi-client workspaces, white-label briefs and exports, everything in Pro.
+- Diligence Snapshot — $1,500–$2,500 one time: a one-off claim-space landscape + competitor prosecution-history report, built for a fundraise or an FTO question.
+
+## FAQ highlights
+
+- Is ClaimWatch legal advice? No. It is a monitoring and research tool. A freedom-to-operate or patentability opinion is a legal judgment only a qualified attorney can give; the brief is built to be reviewed by counsel.
+- How accurate is it — can it miss a filing? Extraction and claim diffs are mechanically verifiable from the canonical record. Recall is harder: some filings can be missed (broad claim language, divisionals under unexpected CPC codes, uncovered jurisdictions). It is an early-warning layer, not a guarantee of completeness.
+- Where does the data come from? Free, canonical government sources: USPTO full-text, assignment, and file-wrapper data; EPO OPS; WIPO PATENTSCOPE; and litigation dockets via court records.
+- Why a weekly cadence instead of real-time alerts? Because the data publishes weekly — grants Tuesdays, pre-grant applications Thursdays — and prosecution moves over months and years.
+
+## Link
+
+- Site: https://asmuelle.github.io/claimwatch/
